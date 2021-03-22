@@ -226,7 +226,7 @@
 						<h5><?php echo __( 'Location' );?></h5>
 						<p class="to_intrst_des"><?php echo $profile->location;?></p>
 						<div class="to_location_map">
-							<img src="https://maps.googleapis.com/maps/api/staticmap?center=<?php echo urlencode($profile->location);?>&zoom=13&size=600x205&maptype=roadmap&key=AIzaSyBFZHfyVXQ0H1Fh30rrZEOUgAi55_zYbZE" alt="<?php echo __( 'Location' );?>" />
+						<div id="map"></div>
 						</div>
 					</div>
 				<?php } ?>
@@ -798,3 +798,37 @@ if( route(2) == 'opengift' && is_numeric(route(3)) ) {
         </div>
     <?php
     }
+	?>
+    <script>
+      function initMap() {
+        var geocoder = new google.maps.Geocoder();
+        var address = "<?php echo $profile->location;?>";
+        
+        geocoder.geocode( { 'address': address}, function(results, status) {
+        
+          if (status == google.maps.GeocoderStatus.OK) {
+            var latitude = results[0].geometry.location.lat();
+            var longitude = results[0].geometry.location.lng();
+            var demomap = {lat: latitude, lng: longitude};
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 14,
+              center: demomap
+             });
+            var marker = new google.maps.Marker({
+              position: demomap,
+              map: map
+            });
+          } 
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrUJRAll-JEBxWRh_q51em1EAv6IQ6nOo&callback=initMap">
+    </script>
+    <style>
+    #map{
+    	width:100%;
+    	float:left;
+    	height:205px;
+    }
+    </style>
