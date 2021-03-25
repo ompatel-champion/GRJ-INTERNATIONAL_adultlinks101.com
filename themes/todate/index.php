@@ -36,15 +36,15 @@
 			<div class="to_main_hero_filters_innrlist">
 				<p><?php echo __( 'I am a' );?></p>
 				<div class="valign-wrapper">
-					<p class="filtr_cbox"><label><input type="radio" class="browser-default" name="_gender" value="1" checked><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,7H13.5A2,2 0 0,1 15.5,9V14.5H14V22H10V14.5H8.5V9A2,2 0 0,1 10.5,7Z" /></svg> <?php echo __( 'Male' );?></span></label></p>
-					<p class="filtr_cbox"><label><input type="radio" class="browser-default" name="_gender" value="2"><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,22V16H7.5L10.09,8.41C10.34,7.59 11.1,7 12,7C12.9,7 13.66,7.59 13.91,8.41L16.5,16H13.5V22H10.5Z" /></svg> <?php echo __( 'Female' );?></span></label></p>
+					<p class="filtr_cbox"><label><input type="radio" class="browser-default" name="_gender" value="1" checked><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,7H13.5A2,2 0 0,1 15.5,9V14.5H14V22H10V14.5H8.5V9A2,2 0 0,1 10.5,7Z" /></svg> Male</span></label></p>
+					<p class="filtr_cbox"><label><input type="radio" class="browser-default" name="_gender" value="2"><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,22V16H7.5L10.09,8.41C10.34,7.59 11.1,7 12,7C12.9,7 13.66,7.59 13.91,8.41L16.5,16H13.5V22H10.5Z" /></svg> Female</span></label></p>
 				</div>
 			</div>
 			<div class="to_main_hero_filters_innrlist">
 				<p><?php echo __( 'I\'m looking for a' );?></p>
 				<div class="valign-wrapper">
-					<p class="filtr_cbox"><label><input type="radio" class="browser-default" name="l_gender" value="1"><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,7H13.5A2,2 0 0,1 15.5,9V14.5H14V22H10V14.5H8.5V9A2,2 0 0,1 10.5,7Z" /></svg> <?php echo __( 'Male' );?></span></label></p>
-					<p class="filtr_cbox"><label><input type="radio" class="browser-default" name="l_gender" value="2" checked><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,22V16H7.5L10.09,8.41C10.34,7.59 11.1,7 12,7C12.9,7 13.66,7.59 13.91,8.41L16.5,16H13.5V22H10.5Z" /></svg> <?php echo __( 'Female' );?></span></label></p>
+					<p class="filtr_cbox"><label><input type="radio" class="browser-default" name="l_gender" value="1"><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,7H13.5A2,2 0 0,1 15.5,9V14.5H14V22H10V14.5H8.5V9A2,2 0 0,1 10.5,7Z" /></svg> Male</span></label></p>
+					<p class="filtr_cbox"><label><input type="radio" class="browser-default" name="l_gender" value="2" checked><span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M10.5,22V16H7.5L10.09,8.41C10.34,7.59 11.1,7 12,7C12.9,7 13.66,7.59 13.91,8.41L16.5,16H13.5V22H10.5Z" /></svg> Female</span></label></p>
 				</div>
 			</div>
 			<div class="to_main_hero_filters_innrlist">
