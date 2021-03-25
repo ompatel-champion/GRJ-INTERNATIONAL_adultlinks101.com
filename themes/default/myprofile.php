@@ -921,6 +921,21 @@ nav .header_user {
                         <?php if(!empty($config->paysera_password)){?>
                             <button id="lock_pro_video_sms_payment" onclick="lock_pro_video_pay_via_sms();" class="btn valign-wrapper sms"><?php echo __( 'SMS' );?> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17,19V5H7V19H17M17,1A2,2 0 0,1 19,3V21A2,2 0 0,1 17,23H7C5.89,23 5,22.1 5,21V3C5,1.89 5.89,1 7,1H17M9,7H15V9H9V7M9,11H13V13H9V11Z"></path></svg></button>
                         <?php } ?>
+                        <?php if( $config->cashfree_payment === 'yes' && !empty($config->cashfree_client_key) && !empty($config->cashfree_secret_key)){?>
+                            <button id="cashfree_payment" onclick="lock_pro_video_pay_via_cashfree();" class="btn valign-wrapper cashfree"><?php echo __( 'cashfree' );?> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17,19V5H7V19H17M17,1A2,2 0 0,1 19,3V21A2,2 0 0,1 17,23H7C5.89,23 5,22.1 5,21V3C5,1.89 5.89,1 7,1H17M9,7H15V9H9V7M9,11H13V13H9V11Z"></path></svg></button>
+                        <?php } ?>
+                        <?php if ($config->iyzipay_payment == "yes" && !empty($config->iyzipay_key) && !empty($config->iyzipay_secret_key)) { ?>
+                            <button id="iyzipay-button1" class="btn-cart btn btn-iyzipay-payment" onclick="lock_pro_video_pay_via_iyzipay();">
+                                <img src="<?php echo GetMedia('upload/photos/iyzipay.png');?>" width="35" height="35">
+                                <?php echo __( 'Iyzipay');?>
+                            </button>
+                        <?php } ?>
+                        <?php if ($config->checkout_payment == 'yes') { ?>
+                            <button id="2co_credit" class="btn 2co valign-wrapper"  onclick="lock_pro_video_pay_via_2co();">
+                                <?php echo __( '2Checkout' );?> 
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20,8H4V6H20M20,18H4V12H20M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" /></svg>
+                            </button>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -971,8 +986,169 @@ nav .header_user {
 </div>
 
 
+
+<div class="bank_transfer_modal modal modal-fixed-footer">
+	<div class="modal-dialog">
+    <div class="modal-content dt_bank_trans_modal">
+		<div class="modal-header">
+			<h5 class="modal-title"><?php echo __( 'Bank Transfer' );?></h5>
+		</div>
+        <div class="modal-body">
+            <div class="bank_info"><?php echo htmlspecialchars_decode($config->bank_description);?></div>
+			<div class="dt_user_profile hide_alert_info_bank_trans">
+                <span class="valign-wrapper">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"></path></svg> <?php echo __( 'Note' );?>:
+                </span>
+				<ul class="browser-default dt_prof_vrfy">
+					<li><?php echo __( 'Please transfer the amount of' );?> <b><span id="bank_transfer_price"></span></b> <?php echo __( 'to this bank account to buy' );?> <b>"<span id="bank_transfer_description"></span>"</b></li>
+					<li><?php echo $config->bank_transfer_note;?></li>
+				</ul>
+            </div>
+			<p class="dt_bank_trans_upl_rec"><a href="javascript:void(0);" onclick="$('.bank_transfer_modal').addClass('up_rec_active'); return false"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M13.5,16V19H10.5V16H8L12,12L16,16H13.5M13,9V3.5L18.5,9H13Z"></path></svg> <?php echo __( 'Upload Receipt' );?></a></p>
+            <div class="upload_bank_receipts">
+                <div onclick="document.getElementById('receipt_img').click(); return false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M13.5,16V19H10.5V16H8L12,12L16,16H13.5M13,9V3.5L18.5,9H13Z"></path></svg>
+                    <p><?php echo __( 'Upload Receipt' );?></p>
+					<img id="receipt_img_preview" src="">
+                </div>
+            </div>
+            <input type="file" id="receipt_img" class="hide" accept="image/x-png, image/gif, image/jpeg" name="receipt_img">
+        </div>
+        <!--<span style="display: block;text-align: center;" id="receipt_img_path"></span>-->
+    </div>
+    <div class="modal-footer">
+		<div class="bank_transfr_progress hide" id="img_upload_progress">
+			<div class="progress">
+				<div id="img_upload_progress_bar" class="determinate progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+			</div>
+		</div>
+		<button class="modal-close waves-effect btn-flat"><?php echo __( 'Close' );?></button>
+        <button class="waves-effect waves-green btn btn-flat bold" disabled id="btn-upload-receipt" data-selected=""><?php echo __( 'Confirm' );?></button>
+    </div>
+	</div>
+</div>
+
+
 <script>
+    function lock_pro_video_pay_via_2co(){
+        $('#2checkout_type').val('lock_pro_video');
+        $('#2checkout_description').val('<?php echo __( "Unlock Upload video feature");?>');
+        $('#2checkout_price').val(<?php echo (int)$config->lock_pro_video_fee;?>);
+
+        $('#2checkout_modal').modal('open');
+    }
+    function lock_pro_video_pay_via_iyzipay(){
+        $('.btn-iyzipay-payment').attr('disabled','true');
+
+        $.post(window.ajax + 'iyzipay/createsession', {
+            payType: 'lock_pro_video',
+            description: '<?php echo __( "Unlock Upload video feature");?>',
+            price: <?php echo (int)$config->lock_pro_video_fee;?>
+        }, function(data) {
+            if (data.status == 200) {
+                $('#iyzipay_content').html('');
+                $('#iyzipay_content').html(data.html);
+            } else {
+                $('.btn-iyzipay').attr('disabled', false).html("Iyzipay App not set yet.");
+            }
+            $('.btn-iyzipay').removeAttr('disabled');
+            $('.btn-iyzipay').find('span').text("<?php echo __( 'iyzipay');?>");
+        });
+
+        $('.btn-iyzipay-payment').removeAttr('disabled');
+
+    }
+
+    function lock_pro_video_pay_via_cashfree(){
+        $('.cashfree-payment').attr('disabled','true');
+
+        $('#cashfree_type').val('lock_pro_video');
+        $('#cashfree_description').val('<?php echo __( 'Unlock Upload video feature' );?>');
+        $('#cashfree_price').val(<?php echo (int)$config->lock_pro_video_fee;?>);
+
+        $("#cashfree_alert").html('');
+        $('.go_pro--modal').fadeOut(250);
+        $('#cashfree_modal_box').modal('open');
+
+        $('.btn-cashfree-payment').removeAttr('disabled');
+    }
+
+    function unlock_photo_private_pay_via_bank(amount){
+        $('#bank_transfer_price').text('<?php echo $config->currency_symbol;?> <?php echo (int)$config->lock_private_photo_fee;?>');
+        $('#bank_transfer_description').text('<?php echo __( 'Unlock Private Photo Payment' );?>');
+        $('#receipt_img_path').html('');
+        $('#receipt_img_preview_unlock_photo_private').attr('src', '');
+        $('.bank_transfer_modal').removeClass('up_rec_img_ready, up_rec_active');
+        $('.bank_transfer_modal').modal('open');
+    }
+
     $(document).ready(function(){
+
+        document.getElementById('receipt_img').addEventListener('change', function(e) {
+            let imgPath = $(this)[0].files[0].name;
+            if (typeof(FileReader) != "undefined") {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#receipt_img_preview').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+            $('#receipt_img_path').html(imgPath);
+            $('.bank_transfer_modal').addClass('up_rec_img_ready');
+            $('#btn-upload-receipt').removeAttr('disabled');
+            $('#btn-upload-receipt').removeClass('btn-flat').addClass('btn-success');
+        });
+
+        document.getElementById('btn-upload-receipt').addEventListener('click', function(e) {
+            e.preventDefault();
+            let bar = $('#img_upload_progress');
+            let percent = $('#img_upload_progress_bar');
+
+            let formData = new FormData();
+            formData.append("description", '<?php echo __( 'Unlock Private Photo Payment' );?>');
+            formData.append("price", <?php echo (int)$config->lock_private_photo_fee;?>);
+            formData.append("mode", 'unlock_photo_private');
+            formData.append("receipt_img", $("#receipt_img")[0].files[0], $("#receipt_img")[0].files[0].value);
+            bar.removeClass('hide');
+            $.ajax({
+                xhr: function() {
+                    let xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function(evt){
+                        if (evt.lengthComputable) {
+                            let percentComplete = evt.loaded / evt.total;
+                            percentComplete = parseInt(percentComplete * 100);
+                            //status.html( percentComplete + "%");
+                            percent.width(percentComplete + '%');
+                            percent.html(percentComplete + '%');
+                            if (percentComplete === 100) {
+                                bar.addClass('hide');
+                                percent.width('0%');
+                                percent.html('0%');
+                            }
+                        }
+                    }, false);
+                    return xhr;
+                },
+                url: window.ajax + 'profile/upload_receipt',
+                type: "POST",
+                async: true,
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout: 60000,
+                dataType: false,
+                data: formData,
+                success: function(result) {
+                    if( result.status == 200 ){
+                        $('.bank_transfer_modal').modal('close');
+                        $('.payment_modalx').modal('close');
+                        M.toast({html: '<?php echo __('Your receipt uploaded successfully.');?>'});
+                        return false;
+                    }
+                }
+            });
+        });
 
         $( document ).on( 'click', '#btn-upload-video-file', function(e){
             var formData = new FormData();

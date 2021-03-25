@@ -187,6 +187,11 @@ if( $user ){
                     $phone      = Secure($user_profile->phone);
                     $password   = rand(111111, 999999);
                     $password_hash   = password_hash($password, PASSWORD_DEFAULT, array('cost' => 11));
+                    if($provider == 'Facebook'){
+                        if(!empty($social_name)){
+                            $user_uniq_id = $user_profile->identifier.'_'.$id;
+                        }                        
+                    }
                     $re_data    = array(
                         'username' => Secure($user_uniq_id, 0),
                         'email' => Secure($user_email, 0),

@@ -250,8 +250,8 @@ Class Profile extends Aj {
                 $file_extension    = pathinfo($id[0]['file'], PATHINFO_EXTENSION);
 
                 $dest = $dir . $_DS . $key . '_private_full.'.$file_extension;
-                $safe_dest = 'upload/photos/private/' . date('Y') . '/' . date('m') . '/' . $key . '_private_full.'.$file_extension;
-                $safe_dest_thumb = 'upload/photos/private/' . date('Y') . '/' . date('m') . '/' . $key . '_private_avatar.'.$file_extension;
+                $safe_dest = 'upload'. $_DS . 'photos'. $_DS . 'private'. $_DS . date('Y') . '/' . date('m') . $_DS  . $key . '_private_full.'.$file_extension;
+                $safe_dest_thumb = 'upload'. $_DS . 'photos'. $_DS . 'private'. $_DS . date('Y') . $_DS . date('m') . $_DS . $key . '_private_avatar.'.$file_extension;
 
                 if($id[0]['private_file'] == "") {
                     CompressImage($id[0]['file'], $dest, self::Config()->profile_picture_image_quality, true);
@@ -749,6 +749,7 @@ Class Profile extends Aj {
             $key      = GenerateKey();
             $filename = $dir . $_DS . $key . '.' . $ext;
             if (move_uploaded_file($file[ 'tmp_name' ], $filename)) {
+                correctImageOrientation($filename);
                 $org_file  = 'upload'. $_DS . 'photos' . $_DS . date('Y') . $_DS . date('m') . $_DS . $key . '_full.' . $ext;
                 $oreginal  = new ImageThumbnail($filename);
                 $oreginal->setResize(false);
@@ -774,6 +775,14 @@ Class Profile extends Aj {
                 }else{
                     $media[ 'user_id' ]    = self::ActiveUser()->id;
                     $saved                 = $db->insert('verification_requests', $media);
+                    $notif_data = array(
+                        'recipient_id' => 0,
+                        'type' => 'verify',
+                        'admin' => 1,
+                        'time' => time()
+                    );
+                    
+                    $db->insert('bank_receipts', $notif_data);
                 }
                 if ($saved) {
                     $_SESSION[ 'userEdited' ] = true;
@@ -832,6 +841,7 @@ Class Profile extends Aj {
             $key      = GenerateKey();
             $filename = $dir . $_DS . $key . '.' . $ext;
             if (move_uploaded_file($file[ 'tmp_name' ], $filename)) {
+                correctImageOrientation($filename);
                 $org_file  = 'upload'. $_DS . 'photos' . $_DS . date('Y') . $_DS . date('m') . $_DS . $key . '_full.' . $ext;
                 $oreginal  = new ImageThumbnail($filename);
                 $oreginal->setResize(false);
@@ -856,6 +866,14 @@ Class Profile extends Aj {
                 }else{
                     $media[ 'user_id' ]    = self::ActiveUser()->id;
                     $saved                 = $db->insert('verification_requests', $media);
+                    $notif_data = array(
+                        'recipient_id' => 0,
+                        'type' => 'verify',
+                        'admin' => 1,
+                        'time' => time()
+                    );
+                    
+                    $db->insert('bank_receipts', $notif_data);
                 }
                 if ($saved) {
                     $_SESSION[ 'userEdited' ] = true;
@@ -918,6 +936,7 @@ Class Profile extends Aj {
 
 
             if (move_uploaded_file($file[ 'tmp_name' ], $filename)) {
+                correctImageOrientation($filename);
 
                 $thumbfile = 'upload'. $_DS . 'photos' . $_DS . date('Y') . $_DS . date('m') . $_DS . $key . '_avater.' . $ext;
                 $org_file  = 'upload'. $_DS . 'photos' . $_DS . date('Y') . $_DS . date('m') . $_DS . $key . '_full.' . $ext;
@@ -1273,7 +1292,7 @@ Class Profile extends Aj {
                 }
             }
 
-            if( $config->disable_phone_field == 'on' ){ 
+            if( $config->disable_phone_field == 'on' && !empty($_POST[ 'phone_number' ])){ 
                 if (self::ActiveUser()->phone_number !== $_POST[ 'phone_number' ]) {
                     $phone = Secure($_POST['phone_number']);
                     if (isset($_POST['phone_number']) && empty($_POST['phone_number'])) {
@@ -2676,6 +2695,8 @@ Class Profile extends Aj {
             $key      = GenerateKey();
             $filename = $dir . $_DS . $key . '.' . $ext;
             if (move_uploaded_file($file[ 'tmp_name' ], $filename)) {
+                correctImageOrientation($filename);
+                
                 $org_file  = $dir . $_DS . $key . '_full.' . $ext;
                 $org_file  = 'upload' . $_DS . 'photos' . $_DS . date('Y') . $_DS . date('m') . $_DS . $key . '_avater.' . $ext;
                 $oreginal  = new ImageThumbnail($filename);
@@ -2696,6 +2717,14 @@ Class Profile extends Aj {
                 $info[ 'mode' ]        = (isset($_POST['mode'])) ? Secure($_POST['mode']) : '';
                 $info[ 'approved' ]    = 0;
                 $saved                 = $db->insert('bank_receipts', $info);
+                $notif_data = array(
+                    'recipient_id' => 0,
+                    'type' => 'bank',
+                    'admin' => 1,
+                    'time' => time()
+                );
+                
+                $db->insert('bank_receipts', $notif_data);
             } else {
                 $error = true;
             }
@@ -2833,7 +2862,7 @@ Class Profile extends Aj {
                     'message' => __('Invalid id')
                 );
             }
-            if (Wo_IsFollowRequested($friend_request_userid, $friend_request_to_userid) === false) {
+            if (Wo_IsFollowRequested1($friend_request_userid, $friend_request_to_userid) === false) {
                 return array(
                     'status' => 400,
                     'message' => __('No Friend Request found')

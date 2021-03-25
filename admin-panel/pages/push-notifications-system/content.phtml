@@ -1,39 +1,54 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>Mobile & API Settings > Push Notifications Settings</h2>
+    <div>
+        <h3>Push Notifications Settings</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Mobile & API Settings</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Push Notifications Settings</li>
+            </ol>
+        </nav>
     </div>
     <!-- Vertical Layout -->
     <div class="row">
         <div class="col-lg-6 col-md-6">
             <div class="card">
-                <div class="header">
-                    <h2>Push Notifications Settings</h2><br>
-                    <div>This system allows your script to send push notifications to any application who uses our API.<br> To get started, <a href="https://onesignal.com/" target="_blank">Register Here</a>.</div>
-                </div>
-                <div class="body">
-                    <div class="alert alert-success email-settings-alert"></div>
+                <div class="card-body">
+                    <h6 class="card-title">Push Notifications Settings</h6>
+					<div class="alert alert-info">This system allows your script to send push notifications to any application who uses our API.<br> To get started, <a href="https://onesignal.com/" target="_blank">Register Here</a>.</div>
+                    <div class="email-settings-alert"></div>
                     <form class="email-settings" method="POST">
                         <label for="push">Push Notifications System</label>
                         <div class="form-group">
-                            <input type="radio" name="push" id="push-enabled" value="1" <?php echo ($wo['config']['push'] == 1) ? 'checked': '';?>>
-                            <label for="push-enabled">Enabled</label>
-                            <input type="radio" name="push" id="push-disabled" value="0" <?php echo ($wo['config']['push'] == 0) ? 'checked': '';?>>
-                            <label for="push-disabled" class="m-l-20">Disabled</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="push" id="push-enabled" value="1" <?php echo ($wo['config']['push'] == 1) ? 'checked': '';?>>
+                                <label class="form-check-label" for="push-enabled">Enabled</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="push" id="push-disabled" value="0" <?php echo ($wo['config']['push'] == 0) ? 'checked': '';?>>
+                                <label class="form-check-label" for="push-disabled" class="m-l-20">Disabled</label>
+                            </div>
                         </div>
                         <br>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="push_id" name="push_id" class="form-control" value="<?php echo $wo['config']['push_id'];?>">
                                 <label class="form-label">OneSignal APP ID</label>
+                                <input type="text" id="push_id" name="push_id" class="form-control" value="<?php echo $wo['config']['push_id'];?>">
+                                
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="push_key" name="push_key" class="form-control" value="<?php echo $wo['config']['push_key'];?>">
                                 <label class="form-label">REST API Key</label>
+                                <input type="text" id="push_key" name="push_key" class="form-control" value="<?php echo $wo['config']['push_key'];?>">
+                                
                             </div>
                         </div>
-                        <span class="help-block">Need Help? <a href="https://documentation.onesignal.com/v3.0/docs/setup" target="_blank">Read The Documentation</a></span>
+                        <p class="help-block">Need Help? <a href="https://documentation.onesignal.com/v3.0/docs/setup" target="_blank">Read The Documentation</a></p>
                         <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
                         <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
                     </form>
@@ -59,7 +74,7 @@ $(function() {
             if (data.status == 200) {
                 form_email_settings.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.email-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.email-settings-alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.email-settings-alert').empty();
                 }, 2000);
@@ -77,7 +92,7 @@ $(function() {
             if (data.status == 200) {
                 form_email2_settings.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.email2-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.email2-settings-alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.email2-settings-alert').empty();
                 }, 2000);
@@ -95,7 +110,7 @@ $(function() {
             if (data.status == 200) {
                 form_email3_settings.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.email3-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.email3-settings-alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.email3-settings-alert').empty();
                 }, 2000);
@@ -113,7 +128,7 @@ $(function() {
             if (data.status == 200) {
                 form_ios_m_settings.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.ios-m-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.ios-m-settings-alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.ios-m-settings-alert').empty();
                 }, 2000);

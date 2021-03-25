@@ -41,6 +41,8 @@ Class Chat extends Aj {
             $key      = GenerateKey();
             $filename = $dir . $_DS . $key . '.' . $ext;
             if (move_uploaded_file($file[ 'tmp_name' ], $filename)) {
+                correctImageOrientation($filename);
+
                 $thumbfile = 'upload/chat/' . date('Y') . '/' . date('m') . '/' . $key . '_m.' . $ext;
                 $thumbnail = new ImageThumbnail($filename);
                 $thumbnail->save($thumbfile);
@@ -245,10 +247,6 @@ Class Chat extends Aj {
             }else{
                 $accepted = 0;
             }
-
-//            //if((int)self::ActiveUser()->id === (int) $user_from->id){
-//                $accepted = 1;
-//            //}
 
             if($config->message_request_system == 'off') {
                 $accepted = 1;

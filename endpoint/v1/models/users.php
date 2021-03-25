@@ -7,12 +7,20 @@ class Users {
         global $_id;
         $this->_id            = $_id;
         $this->_requestMethod = $_SERVER['REQUEST_METHOD'];
-        json(call_user_func_array(array(
-            $this,
-            $this->_id
-        ), array(
-            route(5)
-        )));
+        if (function_exists($this->_requestMethod)) {
+            json(call_user_func_array(array(
+                $this,
+                $this->_id
+            ), array(
+                route(5)
+            )));
+        }
+        else{
+            json($this, array(
+                route(5)
+            ));
+        }
+            
     }
     /*API*/
     public function two_factor(){
@@ -884,7 +892,7 @@ class Users {
                             $profile[$user_id]['likes'][$likesid]['data'] = $this->get_user_profile($like['like_userid'],array('*'),true);
                             $likesid++;
                         }
-                        $profile[$user_id]['likes_count'] = $db->where('user_id',$user_id)->getValue('likes','count(id)');
+                        $profile[$user_id]['likes_count'] = $db->where('like_userid', $user_id)->getOne('likes','count(id) as likes')['likes'];//$db->where('user_id',$user_id)->getValue('likes','count(id)');
                     }else{
                         $profile[$user_id]['likes'] = array();
                         $profile[$user_id]['likes_count'] = 0;
@@ -937,7 +945,15 @@ class Users {
                             $profile[$user_id]['visits'][$visitsid]['data'] = $this->get_user_profile($visit['view_userid'],array('*'),true);
                             $visitsid++;
                         }
-                        $profile[$user_id]['visits_count'] = $db->where('user_id',$user_id)->getValue('views','count(id)');
+                        $views = $db->objectBuilder()
+                                    ->where('v.view_userid',  $user_id)
+                                    ->groupBy('v.user_id')
+                                    ->orderBy('v.created_at', 'DESC')
+                                    ->get('views v', null, array('COUNT(DISTINCT v.user_id) AS views'));
+                        $profile[$user_id]['visits_count'] = 0;
+                        if( $views !== null ){
+                            $profile[$user_id]['visits_count'] = COUNT($views);
+                        }
                     }else{
                         $profile[$user_id]['visits'] = array();
                         $profile[$user_id]['visits_count'] = 0;
@@ -1693,10 +1709,6 @@ class Users {
     }
     /*API*/
     public function test(){
-//        $user_id = GetUserFromSessionID(Secure($_POST['access_token']));
-//        $user_password = $this->get_user_profile($user_id,array('password'));
-//
-//        $recipient = userData($user_id);
         return json(array(
             'code' => 200,
             'data' => auth(),
@@ -1751,33 +1763,39 @@ class Users {
 
 
                 if($insert_query){
-                    $notification_obj = LoadEndPointResource('Notifications');
-                    if($notification_obj){
-                        $notification = $notification_obj->createNotification($user->mobile_device_id,(int)$user_id, (int)$to, 'send_gift', '', '/@' . $user->username . '/opengift/'.mysqli_insert_id($conn) );
-                        if( isset($notification['code']) && $notification['code'] == 200 ){
-                            return json(array(
-                                'credit_amount' => (int)$user->balance,
-                                'message' => __('Gift sent successfully.'),
-                                'code' => 200
-                            ), 200);
-                        }else{
-                            return json(array(
-                                'code' => 400,
-                                'errors' => array(
-                                    'error_id' => '27',
-                                    'error_text' => __('Could not save user gift')
-                                )
-                            ), 400);
-                        }
-                    }else{
-                        return json(array(
-                            'code' => 400,
-                            'errors' => array(
-                                'error_id' => '28',
-                                'error_text' => __('Could not save user gift')
-                            )
-                        ), 400);
-                    }
+                    return json(array(
+                        'credit_amount' => (int)$user->balance,
+                        'message' => __('Gift sent successfully.'),
+                        'code' => 200
+                    ), 200);
+                    
+                    // $notification_obj = LoadEndPointResource('Notifications');
+                    // if($notification_obj){
+                    //     $notification = $notification_obj->createNotification($user->mobile_device_id,(int)$user_id, (int)$to, 'send_gift', '', '/@' . $user->username . '/opengift/'.mysqli_insert_id($conn) );
+                    //     if( isset($notification['code']) && $notification['code'] == 200 ){
+                    //         return json(array(
+                    //             'credit_amount' => (int)$user->balance,
+                    //             'message' => __('Gift sent successfully.'),
+                    //             'code' => 200
+                    //         ), 200);
+                    //     }else{
+                    //         return json(array(
+                    //             'code' => 400,
+                    //             'errors' => array(
+                    //                 'error_id' => '27',
+                    //                 'error_text' => __('Could not save user gift')
+                    //             )
+                    //         ), 400);
+                    //     }
+                    // }else{
+                    //     return json(array(
+                    //         'code' => 400,
+                    //         'errors' => array(
+                    //             'error_id' => '28',
+                    //             'error_text' => __('Could not save user gift')
+                    //         )
+                    //     ), 400);
+                    // }
 
 
                 }else{
@@ -1950,7 +1968,11 @@ class Users {
             $_userid = GetUserFromSessionID(Secure($_POST['access_token']));
             $limit = (isset($_POST['limit']) && is_numeric($_POST['limit']) && (int)$_POST['limit'] > 0) ? (int)$_POST['limit'] : 20;
             $offset = (isset($_POST['offset']) && is_numeric($_POST['offset']) && (int)$_POST['offset'] > 0) ? (int)$_POST['offset'] : 0;
-            $query = GetFindMatcheQuery($_userid, $limit, $offset * $limit);
+            if(isset($_POST['username']) && !empty($_POST['username'])){
+                $query = str_replace("#", Secure($_POST['username']) , "SELECT * FROM `users` WHERE `username` LIKE '%#%' OR `first_name` LIKE '%#%' OR `last_name` LIKE '%#%' ORDER BY `xlikes_created_at` DESC,`xvisits_created_at` DESC,`xmatches_created_at` DESC,`is_pro` DESC,`hot_count` DESC,`gender` DESC LIMIT ".$limit." OFFSET ".$offset.";");
+            }else{
+                $query = GetFindMatcheQuery($_userid, $limit, $offset * $limit);
+            }
             $data = $db->objectBuilder()->rawQuery($query);
             foreach ($data as $key => $result){
 
@@ -2203,6 +2225,7 @@ class Users {
                 if($saved){
                     return json(array(
                         'data' => __('Profile avatar updated successfully.'),
+                        'file' => $files_name,
                         'code' => 200
                     ), 200);
                 }else{
@@ -2325,6 +2348,11 @@ class Users {
                         $_POST['avater'] = $this->ImportImageFromLogin($userData['avatar'], 1);
                     }
 
+                    if($provider == 'facebook'){
+                        if(!empty($social_name)){
+                            $user_uniq_id = $social_name.'_'.$id;
+                        }                        
+                    }
                     $re_data      = array(
                         'username' => Secure($user_uniq_id, 0),
                         'email' => Secure($social_email, 0),
@@ -2663,7 +2691,8 @@ class Users {
 
                 if($saved){
                     return json(array(
-                        'data' => 'Profile avatar uploaded successfully.',
+                        'message' => 'Profile avatar uploaded successfully.',
+                        'data' => $db->where('id', $saved)->getOne('mediafiles'),
                         'file_url' => GetMedia($media[ 'file' ]),
                         'id' => $saved,
                         'code' => 200
@@ -3300,7 +3329,7 @@ class Users {
             }
 
             $friend_request_userid = (int)Secure($_POST['uid']);
-            $friend_request_to_userid = GetUserFromSessionID(Secure($_POST['access_token']));
+            $friend_request_to_userid = (int)GetUserFromSessionID(Secure($_POST['access_token']));
             if (Wo_IsFollowRequested($friend_request_userid, $friend_request_to_userid) === false) {
                 return json(array(
                     'code' => 400,
@@ -3330,7 +3359,7 @@ class Users {
                     )
                 ), 400);
             }
-            $query = mysqli_query($conn, "DELETE FROM `followers` WHERE `following_id` = {$friend_request_userid} AND `follower_id` = {$friend_request_to_userid} AND `active` = '0'");
+            $query = mysqli_query($conn, "DELETE FROM `followers` WHERE `following_id` = {$friend_request_to_userid} AND `follower_id` = {$friend_request_userid} AND `active` = '0'");
             if ($query) {
                 $Notif = LoadEndPointResource('Notifications',true);
                 if ($Notif) {
@@ -3393,7 +3422,7 @@ class Users {
             }
 
             $friend_request_userid = (int)Secure($_POST['uid']);
-            $friend_request_to_userid = GetUserFromSessionID(Secure($_POST['access_token']));
+            $friend_request_to_userid = (int)GetUserFromSessionID(Secure($_POST['access_token']));
             if (Wo_IsFollowRequested($friend_request_userid, $friend_request_to_userid) === false) {
                 return json(array(
                     'code' => 400,
@@ -3423,7 +3452,7 @@ class Users {
                     )
                 ), 400);
             }
-            $query = mysqli_query($conn, "UPDATE `followers` SET `active` = '1' WHERE `following_id` = {$friend_request_userid} AND `follower_id` = {$friend_request_to_userid} AND `active` = '0'");
+            $query = mysqli_query($conn, "UPDATE `followers` SET `active` = '1' WHERE `following_id` = {$friend_request_to_userid} AND `follower_id` = {$friend_request_userid} AND `active` = '0'");
             if ($query) {
                 $Notif = LoadEndPointResource('Notifications',true);
                 if ($Notif) {
@@ -4036,6 +4065,67 @@ class Users {
 
             $r = array();
             foreach ($disliked_users as $key => $value) {
+                $value->userData = userData($value->id);
+                $r[] = $value;
+            }
+            return array(
+                'status' => 200,
+                'data' => $r
+            );
+        }
+    }
+    /*API*/
+    public function list_likes(){
+        global $db,$config;
+        if (empty($_POST['access_token'])) {
+            return json(array(
+                'code' => 400,
+                'errors' => array(
+                    'error_id' => '23',
+                    'error_text' => __('Bad Request, Invalid or missing parameter')
+                )
+            ), 400);
+        } else {
+            $_userid    = GetUserFromSessionID(Secure($_POST['access_token']));
+            $offset     = (isset($_POST['offset'])) ? (int)Secure($_POST['offset']) : 0;
+            $limit      = (isset($_POST['limit']) && !empty($_POST['limit'])) ? (int)Secure($_POST['limit']) : 12;
+
+            $db->objectBuilder()->join('users u', 'l.user_id=u.id', 'LEFT')
+            ->where('l.like_userid', $_userid)
+            ->where('l.is_like', "1")
+            ->where('l.user_id', $_userid, '<>')
+            ->groupBy('l.user_id')
+            ->orderBy('l.created_at', 'DESC');
+
+            // to exclude blocked users
+            $db->where('l.user_id NOT IN (SELECT `block_userid` FROM `blocks` WHERE `user_id` = '.$_userid.')');
+
+            $liked_users        = $db->get('likes l', array(
+                $offset * $limit,
+                $limit
+            ), array(
+                'u.id',
+                'u.online',
+                'u.lastseen',
+                'u.username',
+                'u.avater',
+                'u.country',
+                'u.first_name',
+                'u.last_name',
+                'u.location',
+                'u.birthday',
+                'u.language',
+                'u.relationship',
+                'u.height',
+                'u.body',
+                'u.smoke',
+                'u.ethnicity',
+                'u.pets',
+                'max(l.created_at) as created_at'
+            ));
+
+            $r = array();
+            foreach ($liked_users as $key => $value) {
                 $value->userData = userData($value->id);
                 $r[] = $value;
             }

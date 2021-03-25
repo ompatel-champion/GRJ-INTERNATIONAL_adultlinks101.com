@@ -23,6 +23,7 @@ $wo['script_version'] = $config->version;
 $wo['user']['avatar'] = auth()->avater->avater;
 $wo['user']['url'] = $config->uri . '/@' . auth()->username;
 $wo['user']['name'] = auth()->username;
+$wo['user']['email'] = auth()->email;
 
 $wo['config']['btn_background_color']  = '#a33596';
 $wo['config']['header_background']  = '#1e2321';
@@ -312,7 +313,7 @@ function Wo_ImportImageFromFile($media, $custom_name = '_url_image') {
     }
     if (file_exists($file_dir)) {
         //$upload_s3 = Wo_UploadToS3($file_dir);
-        $check_image = getimagesize($file_dir);
+        $check_image = _getimagesize($file_dir);
         if (!$check_image) {
             unlink($file_dir);
         }

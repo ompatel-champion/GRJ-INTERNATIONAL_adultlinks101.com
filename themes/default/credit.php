@@ -113,6 +113,25 @@
                                     <?php if(!empty($config->paysera_password)){?>
                                     <button id="sms_payment" onclick="PayViaSms();" class="btn valign-wrapper sms"><?php echo __( 'SMS' );?> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17,19V5H7V19H17M17,1A2,2 0 0,1 19,3V21A2,2 0 0,1 17,23H7C5.89,23 5,22.1 5,21V3C5,1.89 5.89,1 7,1H17M9,7H15V9H9V7M9,11H13V13H9V11Z"></path></svg></button>
                                     <?php } ?>
+
+                                    <?php if( $config->cashfree_payment === 'yes' && !empty($config->cashfree_client_key) && !empty($config->cashfree_secret_key)){?>
+                                        <button id="cashfree_payment" onclick="PayViaCashfree();" class="btn valign-wrapper cashfree"><?php echo __( 'cashfree' );?> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17,19V5H7V19H17M17,1A2,2 0 0,1 19,3V21A2,2 0 0,1 17,23H7C5.89,23 5,22.1 5,21V3C5,1.89 5.89,1 7,1H17M9,7H15V9H9V7M9,11H13V13H9V11Z"></path></svg></button>
+                                    <?php } ?>
+                                    <?php if( $config->cashfree_payment === 'yes' && !empty($config->cashfree_client_key) && !empty($config->cashfree_secret_key)){?>
+                                        <button id="cashfree_payment" onclick="PayViaCashfree();" class="btn valign-wrapper cashfree"><?php echo __( 'cashfree' );?> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17,19V5H7V19H17M17,1A2,2 0 0,1 19,3V21A2,2 0 0,1 17,23H7C5.89,23 5,22.1 5,21V3C5,1.89 5.89,1 7,1H17M9,7H15V9H9V7M9,11H13V13H9V11Z"></path></svg></button>
+                                    <?php } ?>
+                                    <?php if ($config->iyzipay_payment == "yes" && !empty($config->iyzipay_key) && !empty($config->iyzipay_secret_key)) { ?>
+                                        <button id="iyzipay-button1" class="btn-cart btn btn-iyzipay-payment" onclick="PayViaIyzipay();">
+                                            <img src="<?php echo GetMedia('upload/photos/iyzipay.png');?>" width="35" height="35">
+                                            <?php echo __( 'Iyzipay');?>
+                                        </button>
+                                    <?php } ?>
+                                    <?php if ($config->checkout_payment == 'yes') { ?>
+                                        <button id="2co_credit" class="btn 2co valign-wrapper"  onclick="PayVia2Co();">
+                                            <?php echo __( '2Checkout' );?> 
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20,8H4V6H20M20,18H4V12H20M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" /></svg>
+                                        </button>
+                                    <?php } ?>
                                 </div>
 							</div>
 						</div>
@@ -266,6 +285,55 @@
 </div>
 
 <script>
+
+<?php if ($config->checkout_payment == 'yes') { ?>
+    function PayVia2Co(){
+        $('#2checkout_type').val('credits');
+        $('#2checkout_description').val(getDescription());
+        $('#2checkout_price').val(getPrice());
+
+        $('#2checkout_modal').modal('open');
+    }
+<?php } ?>
+
+<?php if ($config->iyzipay_payment == "yes" && !empty($config->iyzipay_key) && !empty($config->iyzipay_secret_key)) { ?>
+	function PayViaIyzipay(){
+		$('.btn-iyzipay-payment').attr('disabled','true');
+
+		$.post(window.ajax + 'iyzipay/createsession', {
+            payType: 'credits',
+            description: getDescription(),
+            price: getPrice()
+        }, function(data) {
+			if (data.status == 200) {
+				$('#iyzipay_content').html('');
+				$('#iyzipay_content').html(data.html);
+			} else {
+				$('.btn-iyzipay').attr('disabled', false).html("Iyzipay App not set yet.");
+			}
+			$('.btn-iyzipay').removeAttr('disabled');
+			$('.btn-iyzipay').find('span').text("<?php echo __( 'iyzipay');?>");
+		});
+
+		$('.btn-iyzipay-payment').removeAttr('disabled');
+	}
+<?php } ?>
+
+function PayViaCashfree(){
+
+    $('.cashfree-payment').attr('disabled','true');
+
+    $('#cashfree_type').val('credits');
+    $('#cashfree_description').val(getDescription());
+    $('#cashfree_price').val(getPrice());
+
+    $("#cashfree_alert").html('');
+    $('.go_pro--modal').fadeOut(250);
+    $('#cashfree_modal_box').modal('open');
+
+    $('.btn-cashfree-payment').removeAttr('disabled');
+}
+
 function PayViaSms() {
     window.location = window.ajax + 'sms/generate_credit_link?price=' + getPrice() + '00';
 }
@@ -317,7 +385,19 @@ document.getElementById('stripe_credit').addEventListener('click', function(e) {
     $('#stripe_number').val('');
     $('#stripe_cvc').val('');
     $('#stripe_modal').removeClass('up_rec_img_ready, up_rec_active');
-    $('#stripe_modal').modal('open');
+    //$('#stripe_modal').modal('open');
+
+    $.post(window.ajax + 'stripe/createsession', {
+        payType: 'credits',
+        description: getDescription(),
+        price: getPrice()
+    }, function (data) {
+        if (data.status == 200) {
+            stripe.redirectToCheckout({ sessionId: data.session_id });
+        } else {
+            // $('.modal-body').html('<i class="fa fa-spin fa-spinner"></i> <?php echo __('Payment declined');?> ');
+        }
+    });
 });
 
 document.getElementById('receipt_img').addEventListener('change', function(e) {

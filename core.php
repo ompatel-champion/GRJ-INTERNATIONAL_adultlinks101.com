@@ -65,23 +65,52 @@ function reset_langs(){
 }
 $lang  = new stdClass();
 function GetActiveLang(){
-    global $config;
-    $lang = $config->default_language;
-//    if( isset( $_SESSION['activeLang'] ) && !isset( $_COOKIE['activeLang'] ) ){
-//        $lang = $_SESSION['activeLang'];
+//    global $config;
+//    $lang = $config->default_language;
+////    if( isset( $_SESSION['activeLang'] ) && !isset( $_COOKIE['activeLang'] ) ){
+////        $lang = $_SESSION['activeLang'];
+////    }
+//    if( isset( $_COOKIE['activeLang'] ) ){
+//        $lang = $_COOKIE['activeLang'];
 //    }
-    if( isset( $_COOKIE['activeLang'] ) ){
-        $lang = $_COOKIE['activeLang'];
+//    return $lang;
+
+    global $config, $db;
+    $lang = $config->default_language;
+
+    if( isset($_GET['language']) && $_GET['language'] !== '' ){
+        //$lang = Secure($_GET['language']);
+        setcookie("activeLang", Secure($_GET['language']), time() + (10 * 365 * 24 * 60 * 60), '/');
+        return Secure($_GET['language']);
     }
+
+    if ( isset( $_COOKIE['JWT'] ) && !isset($_GET['language']) ) {
+        $uid = $db->where('session_id', $_COOKIE['JWT'])->getOne('sessions');
+        $dafult_user_lang = $db->where('id', $uid['user_id'])->getOne('users');
+
+        if(isset($_COOKIE['activeLang'])){
+            if( $dafult_user_lang['language'] !== $_COOKIE['activeLang'] ){
+                return $_COOKIE['activeLang'];
+            }
+        }
+
+        if( $dafult_user_lang['language'] !== $lang ){
+            setcookie("activeLang", $dafult_user_lang['language'], time() + (10 * 365 * 24 * 60 * 60), '/');
+            return $dafult_user_lang['language'];
+        }
+    }else{
+
+    }
+
     return $lang;
 }
 function LoadLanguage() {
     global $db,$config,$lang;
-    if( isset( $_GET['language'] ) && $_GET['language'] !== '' ){
-        //Dataset::reset();
-        //$_SESSION['activeLang'] = Secure($_GET['language']);
-        setcookie("activeLang", Secure($_GET['language']), time() + (10 * 365 * 24 * 60 * 60), '/');
-    }
+//    if( isset( $_GET['language'] ) && $_GET['language'] !== '' ){
+//        //Dataset::reset();
+//        //$_SESSION['activeLang'] = Secure($_GET['language']);
+//        setcookie("activeLang", Secure($_GET['language']), time() + (10 * 365 * 24 * 60 * 60), '/');
+//    }
     $dafault_lang = GetActiveLang();//$config->default_language;
 //    if( !isset( $_SESSION['activeLang'] ) ){
 //        $_SESSION['activeLang'] = $config->default_language;
@@ -453,8 +482,10 @@ function DatasetGetSelect($database_value, $dataset_array, $null_value) {
 function GetMedia($media, $allow_empty = true) {
     global $config;
     $s3_site_url = 'https://test.s3.amazonaws.com';
-    if (!empty($config->bucket_name)) {
+    if (!empty($config->bucket_name) && $config->amazone_s3 == 1) {
         $s3_site_url = 'https://'.$config->bucket_name.'.s3.amazonaws.com';
+        $media = str_replace("\\", "/", $media);
+        $media = str_replace("/", "%5C", $media);
     }
     $config->s3_site_url = $s3_site_url;
 
@@ -469,9 +500,9 @@ function GetMedia($media, $allow_empty = true) {
         }
         return $config->s3_site_url . '/' . $media;
     }
-    if($_SERVER['DOCUMENT_ROOT'] == 'D:/xampp/htdocs/quickdate'){
-        return 'https://quickdatescript.com'. '/' . $media;
-    }
+    //if($_SERVER['DOCUMENT_ROOT'] == 'D:/xampp/htdocs/quickdate'){
+    //    return 'https://quickdatescript.com'. '/' . $media;
+    //}
     return $config->uri . '/' . $media;
 }
 function get_verification_photo($id){
@@ -1471,7 +1502,7 @@ function DeleteFromToS3($filename, $options = array()) {
 }
 function CompressImage($source_url, $destination_url, $quality, $blur = false) {
     global $config;
-    $imgsize = getimagesize($source_url);
+    $imgsize = @getimagesize($source_url);
     $finfof  = $imgsize['mime'];
     $image_c = 'imagejpeg';
     if ($finfof == 'image/jpeg') {
@@ -1514,7 +1545,7 @@ function CompressImage($source_url, $destination_url, $quality, $blur = false) {
     return $destination_url;
 }
 function Resize_Crop_Image($max_width, $max_height, $source_file, $dst_dir, $quality = 80) {
-    $imgsize = @getimagesize($source_file);
+    $imgsize = _getimagesize($source_file);
     $width   = $imgsize[0];
     $height  = $imgsize[1];
     $mime    = $imgsize['mime'];
@@ -1558,7 +1589,7 @@ function Resize_Crop_Image($max_width, $max_height, $source_file, $dst_dir, $qua
             }
         }
         if ($another_image == true) {
-            $imgsize = @getimagesize($dst_dir);
+            $imgsize = getimagesize($dst_dir);
             if ($width > 0 && $height > 0) {
                 $width  = $imgsize[0];
                 $height = $imgsize[1];
@@ -2837,7 +2868,7 @@ function ShareFile($data = array(), $type = 0, $crop = true,$fldr=false) {
     $second_file = pathinfo($filename, PATHINFO_EXTENSION);
     if (move_uploaded_file($data['file'], $filename)) {
         if ($second_file == 'jpg' || $second_file == 'jpeg' || $second_file == 'png' || $second_file == 'gif') {
-            $check_file = getimagesize($filename);
+            $check_file = _getimagesize($filename);
             if (!$check_file) {
                 unlink($filename);
             }
@@ -4674,7 +4705,7 @@ function Wo_UserData($user_id){
     return $fetched_data;
 }
 function Wo_RequestNewPayment($user_id = 0, $amount = 0) {
-    global $conn;
+    global $conn,$db;
     if (empty($user_id)) {
         return false;
     }
@@ -4692,6 +4723,15 @@ function Wo_RequestNewPayment($user_id = 0, $amount = 0) {
     $query_text  = "INSERT INTO `affiliates_requests` (`user_id`, `amount`, `full_amount`, `time`) VALUES ('$user_id', '$amount', '$full_amount', '$time')";
     $query       = mysqli_query($conn, $query_text);
     if ($query) {
+
+        $notif_data = array(
+            'recipient_id' => 0,
+            'type' => 'with',
+            'admin' => 1,
+            'time' => time()
+        );
+        
+        $db->insert('bank_receipts', $notif_data);
         return true;
     }
     return false;
@@ -4808,9 +4848,9 @@ function Wo_UpdateBalance($user_id = 0, $balance = 0, $type = '+') {
     $balance   = Secure($balance);
     $user_data = Wo_UserData($user_id);
     if ($type == '+') {
-        $balance = ((int)$user_data['aff_balance'] + $balance);
+        $balance = ((float)$user_data['aff_balance'] + (float)$balance);
     } else {
-        $balance = ((int)$user_data['aff_balance'] - $balance);
+        $balance = ((float)$user_data['aff_balance'] - (float)$balance);
     }
     $query_one = "UPDATE `users` SET `aff_balance` = '{$balance}' WHERE `id` = {$user_id} ";
     $query     = mysqli_query($conn, $query_one);
@@ -4989,6 +5029,24 @@ function Wo_CountFollowRequests($data = array()) {
     $sql_query_one = mysqli_query($conn, $query_one);
     $sql_fetch_one = mysqli_fetch_assoc($sql_query_one);
     return $sql_fetch_one['FollowRequests'];
+}
+function Wo_IsFollowRequested1($following_id = 0, $follower_id = 0) {
+    global $conn;
+    if (!isset($following_id) or empty($following_id) or !is_numeric($following_id) or $following_id < 1) {
+        return false;
+    }
+    if (!is_numeric($follower_id) or $follower_id < 1) {
+        return false;
+    }
+    $following_id = Secure($following_id);
+    $follower_id  = Secure($follower_id);
+    $query        = "SELECT `id` FROM `followers` WHERE `follower_id` = {$follower_id} AND `following_id` = {$following_id} AND `active` = '0'";
+    $sql_query    = mysqli_query($conn, $query);
+    if (mysqli_num_rows($sql_query) > 0) {
+        return true;
+    }else{
+        return false;
+    }
 }
 function Wo_IsFollowRequested($following_id = 0, $follower_id = 0) {
     global $conn;
@@ -5518,4 +5576,63 @@ function RecordDailyCredit(){
             return false;
         }
     }
+}
+function _getimagesize($file_name, $info=array()){
+    global $config;
+    if(empty($file_name)){
+        return 0;
+    }
+    if ($config->amazone_s3 == 1) {
+        if (!empty($config->amazone_s3_key) || !empty($config->amazone_s3_s_key) || !empty($config->region) || !empty($config->bucket_name)) {
+            $ch = curl_init($file_name);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_HEADER, TRUE);
+            curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+            $data = curl_exec($ch);
+            $size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+            curl_close($ch);
+            return $size();
+        }
+    }else{
+        if (strpos($file_name, "https://") === false) {
+            return @getimagesize($file_name, $info);
+        }else{
+            $ch = curl_init($file_name);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_HEADER, TRUE);
+            curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+            $data = curl_exec($ch);
+            $size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+            curl_close($ch);
+            return $size();
+        }
+
+    }
+}
+
+function correctImageOrientation($filename) {
+  if (function_exists('exif_read_data')) {
+    $exif = exif_read_data($filename);
+    if($exif && isset($exif['Orientation'])) {
+      $orientation = $exif['Orientation'];
+      if($orientation != 1){
+        $img = imagecreatefromjpeg($filename);
+        $deg = 0;
+        $image = imagecreatefromjpeg($filename);
+        if (in_array($exif['Orientation'], [3, 4])) {
+            $image = imagerotate($image, 180, 0);
+        }
+        if (in_array($exif['Orientation'], [5, 6])) {
+            $image = imagerotate($image, -90, 0);
+        }
+        if (in_array($exif['Orientation'], [7, 8])) {
+            $image = imagerotate($image, 90, 0);
+        }
+        if (in_array($exif['Orientation'], [2, 5, 7, 4])) {
+            imageflip($image, IMG_FLIP_HORIZONTAL);
+        }
+        imagejpeg($image, $filename, 80);
+      } // if there is some rotation necessary
+    } // if have the exif orientation info
+  } // if function exists     
 }

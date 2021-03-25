@@ -13,7 +13,7 @@ class ImageThumbnail {
         $this->img_file      = $file;
         $this->thumb_resize  = true;
         $this->thumb_quality = 70;
-		list($width, $height, $type, $attr) = @getimagesize($this->img_file, $info);
+		list($width, $height, $type, $attr) = getimagesize($this->img_file, $info);
 		if (is_array($info)) {
 	        $this->img_width    = $width;
 	        $this->img_height   = $height;

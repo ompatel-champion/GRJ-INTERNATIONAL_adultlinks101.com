@@ -10,104 +10,167 @@ if (($page > $db->totalPages) && !empty($_GET['page-id'])) {
 
 ?>
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>Photos > Manage Photos & Videos</h2>
+    <div>
+        <h3>Manage Photos & Videos</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Photos</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Manage Photos & Videos</li>
+            </ol>
+        </nav>
     </div>
     <!-- Vertical Layout -->
-    <div class="row">
-        <div class="col-lg-12 col-md-12">
-            <div class="card">
-                <div class="header">
-                    <h2>Manage Photos & Videos</h2>
-                    <?php if ($wo['config']['review_media_files'] == 1) {?>
-                        <button onclick="Wo_DisApproveAllPhoto();" type="button" class="btn btn-warning waves-effect waves-light" style="display: inline-block;float: right;margin-top: -23px;margin-left: 13px;">DISAPPROVE ALL</button>
-                        &nbsp;
-                        <button onclick="Wo_ApproveAllPhoto();" type="button" class="btn btn-success waves-effect waves-light" style="display: inline-block;float: right;margin-top: -23px;">APPROVE ALL</button>
-                    <?php } ?>
-                </div>
-                <div class="clearfix"></div>
-                <div class="table-responsive1">
-                    <table class="table table-bordered table-striped table-hover">
-                        <tbody>
-                        <?php
-                        foreach ($mediafiles as $mediafilelist) {
-                            $wo['mediafilelist'] = $mediafilelist;
-                            $wo['mediafilelist']->user = new stdClass();// userData($mediafilelist->user_id,array('username','avater'));
-                            $user = $db->where('id', $mediafilelist->user_id)->getOne('users',array('username','avater'));
-                            $wo['mediafilelist']->user->username = $user['username'];
-                            $wo['mediafilelist']->user->avater->avater = GetMedia($user['avater']);
-                            echo Wo_LoadAdminPage('manage-photos/list');
-                        }
-                        ?>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="wo-admincp-feturepager" style="width: 98%;margin: 0 auto;">
-                    <div class="pull-left">
-                        <span>
-                          <?php echo "Showing $page out of " . $db->totalPages; ?>
-                        </span>
-                    </div>
-                    <div class="pull-right">
-                        <nav>
-                            <ul class="pagination">
-                                <li>
-                                    <a href="<?php echo Wo_LoadAdminLinkSettings('manage-photos?page-id=1'); ?>" class="waves-effect" title='First Page'>
-                                        <i class="material-icons">first_page</i>
-                                    </a>
-                                </li>
-                                <?php if ($page > 1) {  ?>
-                                    <li>
-                                        <a href="<?php echo Wo_LoadAdminLinkSettings('manage-photos?page-id=' . ($page - 1)); ?>" class="waves-effect" title='Previous Page'>
-                                            <i class="material-icons">chevron_left</i>
-                                        </a>
-                                    </li>
-                                <?php  } ?>
+		<div class="clearfix"></div>
+		<?php if ($wo['config']['review_media_files'] == 1) {?>
+			<button onclick="Wo_ApproveAllPhoto('hide');" type="button" class="btn btn-success waves-effect waves-light">Approve All</button> <button onclick="Wo_DisApproveAllPhoto('hide');" type="button" class="btn btn-warning waves-effect waves-light">Disapprove All</button><br><br>
+		<?php } ?>
+		<div class="row">
+			<?php
+			foreach ($mediafiles as $mediafilelist) {
+				$wo['mediafilelist'] = $mediafilelist;
+				$wo['mediafilelist']->user = $db->where('id', $mediafilelist->user_id)->objectbuilder()->getOne('users',array('username','avater'));
+				$wo['mediafilelist']->user->avater = GetMedia($wo['mediafilelist']->user->avater);
+				echo Wo_LoadAdminPage('manage-photos/list');
+			}
+			?>
+		</div>
+		<div class="wo-admincp-feturepager" style="width: 98%;margin: 0 auto;">
+			<div class="pull-left">
+				<span>
+				  <?php echo "Showing $page out of " . $db->totalPages; ?>
+				</span>
+			</div>
+			<div class="pull-right">
+				<nav>
+					<ul class="pagination">
+						<li>
+							<a href="<?php echo Wo_LoadAdminLinkSettings('manage-photos?page-id=1'); ?>" class="waves-effect" title='First Page'>
+								<i class="material-icons">first_page</i>
+							</a>
+						</li>
+						<?php if ($page > 1) {  ?>
+							<li>
+								<a href="<?php echo Wo_LoadAdminLinkSettings('manage-photos?page-id=' . ($page - 1)); ?>" class="waves-effect" title='Previous Page'>
+									<i class="material-icons">chevron_left</i>
+								</a>
+							</li>
+						<?php  } ?>
 
-                                <?php
-                                $nums       = 0;
-                                $nums_pages = ($page > 4) ? ($page - 4) : $page;
+						<?php
+						$nums       = 0;
+						$nums_pages = ($page > 4) ? ($page - 4) : $page;
 
-                                for ($i=$nums_pages; $i <= $db->totalPages; $i++) {
-                                    if ($nums < 20) {
-                                        ?>
-                                        <li class="<?php echo ($page == $i) ? 'active' : ''; ?>">
-                                            <a href="<?php echo Wo_LoadAdminLinkSettings('manage-photos?page-id=' . ($i)); ?>" class="waves-effect">
-                                                <?php echo $i ?>
-                                            </a>
-                                        </li>
+						for ($i=$nums_pages; $i <= $db->totalPages; $i++) {
+							if ($nums < 20) {
+								?>
+								<li class="<?php echo ($page == $i) ? 'active' : ''; ?>">
+									<a href="<?php echo Wo_LoadAdminLinkSettings('manage-photos?page-id=' . ($i)); ?>" class="waves-effect">
+										<?php echo $i ?>
+									</a>
+								</li>
 
-                                    <?php } $nums++; }?>
+							<?php } $nums++; }?>
 
-                                <?php if ($db->totalPages > $page) { ?>
-                                    <li>
-                                        <a href="<?php echo Wo_LoadAdminLinkSettings('manage-photos?page-id=' . ($page + 1)); ?>" class="waves-effect" title="Next Page">
-                                            <i class="material-icons">chevron_right</i>
-                                        </a>
-                                    </li>
-                                <?php } ?>
-                                <li>
-                                    <a href="<?php echo Wo_LoadAdminLinkSettings('manage-photos?page-id=' . ($db->totalPages)); ?>" class="waves-effect" title='Last Page'>
-                                        <i class="material-icons">last_page</i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+						<?php if ($db->totalPages > $page) { ?>
+							<li>
+								<a href="<?php echo Wo_LoadAdminLinkSettings('manage-photos?page-id=' . ($page + 1)); ?>" class="waves-effect" title="Next Page">
+									<i class="material-icons">chevron_right</i>
+								</a>
+							</li>
+						<?php } ?>
+						<li>
+							<a href="<?php echo Wo_LoadAdminLinkSettings('manage-photos?page-id=' . ($db->totalPages)); ?>" class="waves-effect" title='Last Page'>
+								<i class="material-icons">last_page</i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
     <div class="clearfix"></div>
 </div>
 </div>
-
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal1Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModal1Label">Delete Photo?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this Photo?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="DeleteModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModal1Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModal1Label">Approve Photo?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to Approve all media files?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Approve</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="DeleteModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModal1Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModal1Label">DisApprove Photo?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to DisApprove all media files?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">DisApprove</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <script>
+    $('.image-popup').magnificPopup({
+        type: 'image',
+        zoom: {
+            enabled: true,
+            duration: 300,
+            easing: 'ease-in-out',
+            opener: function(openerElement) {
+                return openerElement.is('img') ? openerElement : openerElement.find('img');
+            }
+        }
+    });
 
-    function Wo_DeletePhoto(photo_id,photo_file) {
-        if (confirm("Are you sure you want to delete this photo?") == false) {
+    function Wo_DeletePhoto(photo_id,photo_file,type = 'show') {
+        if (type == 'hide') {
+            $('#DeleteModal').find('.btn-primary').attr('onclick', "Wo_DeletePhoto('"+photo_id+"','"+photo_file+"')");
+            $('#DeleteModal').modal('show');
             return false;
         }
         hash_id = '<?php echo Wo_CreateSession();?>';
@@ -142,8 +205,10 @@ if (($page > $db->totalPages) && !empty($_GET['page-id'])) {
     }
 
 
-    function Wo_ApproveAllPhoto() {
-        if (confirm("Are you sure you want to Approve all media files?") == false) {
+    function Wo_ApproveAllPhoto(type = 'show') {
+        if (type == 'hide') {
+            $('#DeleteModal2').find('.btn-primary').attr('onclick', "Wo_ApproveAllPhoto()");
+            $('#DeleteModal2').modal('show');
             return false;
         }
         hash_id = '<?php echo Wo_CreateSession();?>';
@@ -154,8 +219,10 @@ if (($page > $db->totalPages) && !empty($_GET['page-id'])) {
         });
     }
 
-    function Wo_DisApproveAllPhoto() {
-        if (confirm("Are you sure you want to DisApprove all media files?") == false) {
+    function Wo_DisApproveAllPhoto(type = 'show') {
+        if (type == 'hide') {
+            $('#DeleteModal3').find('.btn-primary').attr('onclick', "Wo_DisApproveAllPhoto()");
+            $('#DeleteModal3').modal('show');
             return false;
         }
         hash_id = '<?php echo Wo_CreateSession();?>';

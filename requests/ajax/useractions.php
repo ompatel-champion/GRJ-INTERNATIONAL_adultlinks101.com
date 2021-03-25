@@ -19,7 +19,7 @@ Class UserActions extends Aj {
                 $last_name  = Secure($_POST[ 'last_name' ]);
                 $username   = Secure($_POST[ 'username' ]);
                 $email      = Secure($_POST[ 'email' ]);
-                $password   = Secure($_POST[ 'password' ]);
+                $password   = $_POST[ 'password' ];
                 if (isset($_POST[ 'username' ]) && empty($_POST[ 'username' ])) {
                     $error .= '<p>• ' . __('Missing username.') . '</p>';
                 }
@@ -53,19 +53,25 @@ Class UserActions extends Aj {
                 if (preg_match_all('~@(.*?)(.*)~', $email, $matches) && !empty($matches[2]) && !empty($matches[2][0]) && Wo_IsBanned($matches[2][0])) {
                     $error .= '<p>• ' . __('The email provider is blacklisted and not allowed, please choose another email provider.') . '</p>';
                 }
+                if(!empty($config->specific_email_signup)){
+                    if (preg_match_all('~@(.*?)(.*)~', $_POST['email'], $matches) && !empty($matches[2]) && !empty($matches[2][0]) && $matches[2][0] !== $config->specific_email_signup) {
+                        $error = str_replace('{0}',$config->specific_email_signup , __('you must signup using {0} only.'));
+                    }
+                }
 
                 if ($error == '') {
                     $re_data = $_POST;
                     $ref_user_id = null;
-                    if (!empty($_COOKIE['ref']) && $config->affiliate_system == "1") {
-                        $ref_user_id = UserIdFromUsername($_COOKIE['ref']);
-                        $re_data['referrer'] = (int)Secure($ref_user_id);
-                        $re_data['src']      = Secure('Referrer');
-                        if (!empty($ref_user_id) && is_numeric($ref_user_id) && $config->affiliate_type == '0') {
+                    $ref = ($_SESSION['ref']) ? $_SESSION['ref'] : $_COOKIE['ref'];
+                    if (!empty($ref) && $config->affiliate_type == 0) {
+                        $ref_user_id = UserIdFromUsername($ref);
+                        if (!empty($ref_user_id) && is_numeric($ref_user_id)) {
+                            $re_data['referrer'] = Secure($ref_user_id);
+                            $re_data['src']      = Secure('Referrer');
                             $update_balance      = Wo_UpdateBalance($ref_user_id, $config->amount_ref);
+                            unset($_SESSION['ref']);
+                            setcookie('ref', '', 1, '/');
                         }
-                        setcookie('src', '', 1, '/');
-                        setcookie('ref', '', 1, '/');
                     }
                     $regestered_user = $users->register($re_data);
                     if ($regestered_user[ 'code' ] == 200) {
@@ -129,8 +135,8 @@ Class UserActions extends Aj {
                     if (TwoFactor($getUser['id']) === false) {
                         session_start();
                         $_SESSION['code_id'] = $getUser['id'];
-                        setcookie("code_id", $getUser['id'], time() + (10 * 365 * 24 * 60 * 60), '/');
-                        $_COOKIE['code_id'] = $getUser['id'];
+//                        setcookie("code_id", $getUser['id'], time() + (10 * 365 * 24 * 60 * 60), '/');
+//                        $_COOKIE['code_id'] = $getUser['id'];
                         return array(
                             'status' => 600,
                             'url' => $config->uri . '/unusual-login?type=two-factor'
@@ -1165,6 +1171,14 @@ Class UserActions extends Aj {
                 'report_text' => $report_content,
                 'created_at' => date('Y-m-d H:i:s')
             ));
+            $notif_data = array(
+                'recipient_id' => 0,
+                'type' => 'report',
+                'admin' => 1,
+                'time' => time()
+            );
+            
+            $db->insert('bank_receipts', $notif_data);
         }
         if ($saved) {
             return array(

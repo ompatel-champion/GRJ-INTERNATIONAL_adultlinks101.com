@@ -440,7 +440,7 @@ class Messages {
     }
     /*API*/
     public function send_text_message() {
-        global $db;
+        global $db,$config;
         $token = ( isset( $_POST['access_token'] ) ) ? Secure($_POST['access_token']) : ( ( isset( $_POST['hash_id'] ) ) ? $_POST['hash_id'] : null );
         if (empty($_POST['message']) || empty($_POST['to_userid']) || $token == null) {
             return json(array(
@@ -461,6 +461,28 @@ class Messages {
                 ), 400);
             }
             $user_id   = GetUserFromSessionID(Secure($token));
+
+            $_user = $db->where('id' , $user_id)->getOne('users');
+            if ($_user['is_pro'] == '0') {
+                if( (int)$config->not_pro_chat_limit_daily == 0 ){
+                    return array(
+                        'status' => 200,
+                        'message' => __('please recharge your credits.'),
+                        'mode' => 'credits'
+                    );
+                }
+                if (GetNonProMaxUserChatsPerDay($_user['id']) > $config->not_pro_chat_limit_daily -1) {
+                    if (isNonProCanChatWith($_user['id'], (int)$from) === false) {
+                        return array(
+                            'status' => 200,
+                            'message' => __('please recharge your credits.'),
+                            'mode' => 'credits'
+                        );
+                    }
+                }
+            }
+
+
             $to_userid = (int) Secure($_POST['to_userid']);
             $hash_id = Secure($_POST['hash_id']);
             $this->createNewConversation($to_userid, $user_id);
@@ -528,6 +550,28 @@ class Messages {
                 ), 400);
             }
             $user_id    = GetUserFromSessionID(Secure($token));
+
+            $_user = $db->where('id' , $user_id)->getOne('users');
+            if ($_user['is_pro'] == '0') {
+                if( (int)$config->not_pro_chat_limit_daily == 0 ){
+                    return array(
+                        'status' => 200,
+                        'message' => __('please recharge your credits.'),
+                        'mode' => 'credits'
+                    );
+                }
+                if (GetNonProMaxUserChatsPerDay($_user['id']) > $config->not_pro_chat_limit_daily -1) {
+                    if (isNonProCanChatWith($_user['id'], (int)$from) === false) {
+                        return array(
+                            'status' => 200,
+                            'message' => __('please recharge your credits.'),
+                            'mode' => 'credits'
+                        );
+                    }
+                }
+            }
+
+
             $hash_id = Secure($_POST['hash_id']);
             $to_userid  = (int) Secure($_POST['to_userid']);
             $sticker_id = (int) Secure($_POST['sticker_id']);
@@ -605,6 +649,27 @@ class Messages {
                 ), 400);
             }
             $user_id   = GetUserFromSessionID(Secure($token));
+
+            $_user = $db->where('id' , $user_id)->getOne('users');
+            if ($_user['is_pro'] == '0') {
+                if( (int)$config->not_pro_chat_limit_daily == 0 ){
+                    return array(
+                        'status' => 200,
+                        'message' => __('please recharge your credits.'),
+                        'mode' => 'credits'
+                    );
+                }
+                if (GetNonProMaxUserChatsPerDay($_user['id']) > $config->not_pro_chat_limit_daily -1) {
+                    if (isNonProCanChatWith($_user['id'], (int)$from) === false) {
+                        return array(
+                            'status' => 200,
+                            'message' => __('please recharge your credits.'),
+                            'mode' => 'credits'
+                        );
+                    }
+                }
+            }
+            
             $hash_id = Secure($_POST['hash_id']);
             $to_userid = (int) Secure($_POST['to_userid']);
             if (isUserInBlockList($to_userid, $user_id)) {

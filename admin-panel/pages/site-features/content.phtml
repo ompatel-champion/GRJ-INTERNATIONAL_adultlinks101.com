@@ -1,28 +1,37 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>Settings > Manage Features</h2>
+    <div>
+        <h3>Manage Features</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Settings</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Manage Features</li>
+            </ol>
+        </nav>
     </div>
     <!-- Vertical Layout -->
     <div class="row">
         <div class="col-lg-3 col-md-3">
             <div class="card">
-                <div class="header">
-                    <h2>Credits system settings</h2>
-                </div>
-                <div class="body">
-                    <div class="alert alert-success site-settings-alert"></div>
+                <div class="card-body">
+                    <h6 class="card-title">Credits system settings</h6>
+                    <div class="site-settings-alert"></div>
                     <form class="site-settings" method="POST">
                         <label for="user_registration">Bag of Credits</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="bag_of_credits_amount" class="form-control" value="<?php echo $wo['config']['bag_of_credits_amount']?>">
                                 <label class="form-label">Points</label>
+                                <input type="text" name="bag_of_credits_amount" class="form-control" value="<?php echo $wo['config']['bag_of_credits_amount']?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="bag_of_credits_price" class="form-control" value="<?php echo $wo['config']['bag_of_credits_price']?>">
                                 <label class="form-label">Price <?php echo $wo['config']['currency_symbol']?></label>
+                                <input type="text" name="bag_of_credits_price" class="form-control" value="<?php echo $wo['config']['bag_of_credits_price']?>">
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -31,14 +40,14 @@
                         <label for="user_registration">Box of Credits</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="box_of_credits_amount" class="form-control" value="<?php echo $wo['config']['box_of_credits_amount']?>">
                                 <label class="form-label">Points</label>
+                                <input type="text" name="box_of_credits_amount" class="form-control" value="<?php echo $wo['config']['box_of_credits_amount']?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="box_of_credits_price" class="form-control" value="<?php echo $wo['config']['box_of_credits_price']?>">
                                 <label class="form-label">Price <?php echo $wo['config']['currency_symbol']?></label>
+                                <input type="text" name="box_of_credits_price" class="form-control" value="<?php echo $wo['config']['box_of_credits_price']?>">
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -47,22 +56,22 @@
                         <label for="user_registration">Chest of Credits</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="chest_of_credits_amount" class="form-control" value="<?php echo $wo['config']['chest_of_credits_amount']?>">
                                 <label class="form-label">Points</label>
+                                <input type="text" name="chest_of_credits_amount" class="form-control" value="<?php echo $wo['config']['chest_of_credits_amount']?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="chest_of_credits_price" class="form-control" value="<?php echo $wo['config']['chest_of_credits_price']?>">
                                 <label class="form-label">Price <?php echo $wo['config']['currency_symbol']?></label>
+                                <input type="text" name="chest_of_credits_price" class="form-control" value="<?php echo $wo['config']['chest_of_credits_price']?>">
                             </div>
                         </div>
 
                         <label for="user_registration">More Stickers Credits</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="more_stickers_credits_price" class="form-control" value="<?php echo $wo['config']['more_stickers_credits_price']?>">
                                 <label class="form-label">Points</label>
+                                <input type="text" name="more_stickers_credits_price" class="form-control" value="<?php echo $wo['config']['more_stickers_credits_price']?>">
                             </div>
                         </div>
 
@@ -75,17 +84,15 @@
         </div>
         <div class="col-lg-3 col-md-3">
             <div class="card">
-                <div class="header">
-                    <h2>Premium users settings</h2>
-                </div>
-                <div class="body">
-                    <div class="alert alert-success site-settings-alert2"></div>
+                <div class="card-body">
+                    <h6 class="card-title">Premium users settings</h6>
+                    <div class="site-settings-alert2"></div>
                     <form class="site-settings2" method="POST">
                         <label for="user_registration">Weekly</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="weekly_pro_plan" class="form-control" value="<?php echo $wo['config']['weekly_pro_plan']?>">
                                 <label class="form-label">Price <?php echo $wo['config']['currency_symbol']?></label>
+                                <input type="text" name="weekly_pro_plan" class="form-control" value="<?php echo $wo['config']['weekly_pro_plan']?>">
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -94,8 +101,8 @@
                         <label for="user_registration">Monthly</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="monthly_pro_plan" class="form-control" value="<?php echo $wo['config']['monthly_pro_plan']?>">
                                 <label class="form-label">Price <?php echo $wo['config']['currency_symbol']?></label>
+                                <input type="text" name="monthly_pro_plan" class="form-control" value="<?php echo $wo['config']['monthly_pro_plan']?>">
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -104,8 +111,8 @@
                         <label for="user_registration">Yearly</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="yearly_pro_plan" class="form-control" value="<?php echo $wo['config']['yearly_pro_plan']?>">
                                 <label class="form-label">Price <?php echo $wo['config']['currency_symbol']?></label>
+                                <input type="text" name="yearly_pro_plan" class="form-control" value="<?php echo $wo['config']['yearly_pro_plan']?>">
                             </div>
                         </div>
                         <br>
@@ -113,8 +120,8 @@
                         <label for="user_registration">Lifetime</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="lifetime_pro_plan" class="form-control" value="<?php echo $wo['config']['lifetime_pro_plan']?>">
                                 <label class="form-label">Price <?php echo $wo['config']['currency_symbol']?></label>
+                                <input type="text" name="lifetime_pro_plan" class="form-control" value="<?php echo $wo['config']['lifetime_pro_plan']?>">
                             </div>
                         </div>
 
@@ -126,23 +133,21 @@
         </div>
         <div class="col-lg-3 col-md-3">
             <div class="card">
-                <div class="header">
-                    <h2>Popularity settings</h2>
-                </div>
-                <div class="body">
-                    <div class="alert alert-success site-settings-alert5"></div>
+                <div class="card-body">
+                    <h6 class="card-title">Popularity Settings</h6>
+                    <div class="site-settings-alert5"></div>
                     <form class="site-settings5" method="POST">
                         <label for="user_registration">x10 Visits</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="cost_per_xvisits" class="form-control" value="<?php echo $wo['config']['cost_per_xvisits']?>">
                                 <label class="form-label">Points</label>
+                                <input type="text" name="cost_per_xvisits" class="form-control" value="<?php echo $wo['config']['cost_per_xvisits']?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="xvisits_expire_time" class="form-control" value="<?php echo $wo['config']['xvisits_expire_time']?>">
                                 <label class="form-label">Minutes</label>
+                                <input type="text" name="xvisits_expire_time" class="form-control" value="<?php echo $wo['config']['xvisits_expire_time']?>">
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -150,14 +155,14 @@
                         <label for="user_registration">x4 Likes</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="cost_per_xlike" class="form-control" value="<?php echo $wo['config']['cost_per_xlike']?>">
                                 <label class="form-label">Points</label>
+                                <input type="text" name="cost_per_xlike" class="form-control" value="<?php echo $wo['config']['cost_per_xlike']?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="xlike_expire_time" class="form-control" value="<?php echo $wo['config']['xlike_expire_time']?>">
                                 <label class="form-label">Minutes</label>
+                                <input type="text" name="xlike_expire_time" class="form-control" value="<?php echo $wo['config']['xlike_expire_time']?>">
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -171,33 +176,31 @@
 
         <div class="col-lg-3 col-md-3">
             <div class="card">
-                <div class="header">
-                    <h2>Boost me! settings</h2>
-                </div>
-                <div class="body">
-                    <div class="alert alert-success site-settings-alert4"></div>
+                <div class="card-body">
+                    <h6 class="card-title">Boost me! settings</h6>
+                    <div class="site-settings-alert4"></div>
                     <form class="site-settings4" method="POST">
                         <label for="user_registration">Time to expire Boost</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="boost_expire_time" class="form-control" value="<?php echo $wo['config']['boost_expire_time']?>">
                                 <label class="form-label">Minutes</label>
+                                <input type="text" name="boost_expire_time" class="form-control" value="<?php echo $wo['config']['boost_expire_time']?>">
                             </div>
                         </div>
 
                         <label for="user_registration">Pro user Credits</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="pro_boost_me_credits_price" class="form-control" value="<?php echo $wo['config']['pro_boost_me_credits_price']?>">
                                 <label class="form-label">Points</label>
+                                <input type="text" name="pro_boost_me_credits_price" class="form-control" value="<?php echo $wo['config']['pro_boost_me_credits_price']?>">
                             </div>
                         </div>
 
                         <label for="user_registration">Normal user Credits</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="normal_boost_me_credits_price" class="form-control" value="<?php echo $wo['config']['normal_boost_me_credits_price']?>">
                                 <label class="form-label">Points</label>
+                                <input type="text" name="normal_boost_me_credits_price" class="form-control" value="<?php echo $wo['config']['normal_boost_me_credits_price']?>">
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -209,17 +212,15 @@
         </div>
         <div class="col-lg-3 col-md-3">
             <div class="card">
-                <div class="header">
-                    <h2>Gift settings</h2>
-                </div>
-                <div class="body">
-                    <div class="alert alert-success site-settings-alert3"></div>
+                <div class="card-body">
+                    <h6 class="card-title">Gift Settings</h6>
+                    <div class="site-settings-alert3"></div>
                     <form class="site-settings3" method="POST">
                         <label for="user_registration">Cost per gift sent</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="cost_per_gift" class="form-control" value="<?php echo $wo['config']['cost_per_gift']?>">
                                 <label class="form-label">Points</label>
+                                <input type="text" name="cost_per_gift" class="form-control" value="<?php echo $wo['config']['cost_per_gift']?>">
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -244,7 +245,7 @@ $(function() {
             if (data.status == 200) {
             	form_site_settings.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-            	$('.site-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+            	$('.site-settings-alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
             	setTimeout(function () {
             		$('.site-settings-alert').empty();
             	}, 2000);
@@ -262,7 +263,7 @@ $(function() {
             if (data.status == 200) {
                 form_site_settings2.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.site-settings-alert2').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.site-settings-alert2').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.site-settings-alert2').empty();
                 }, 2000);
@@ -280,7 +281,7 @@ $(function() {
             if (data.status == 200) {
                 form_site_settings3.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.site-settings-alert3').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.site-settings-alert3').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.site-settings-alert3').empty();
                 }, 2000);
@@ -298,7 +299,7 @@ $(function() {
             if (data.status == 200) {
                 form_site_settings4.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.site-settings-alert4').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.site-settings-alert4').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.site-settings-alert4').empty();
                 }, 2000);
@@ -316,7 +317,7 @@ $(function() {
             if (data.status == 200) {
                 form_site_settings5.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.site-settings-alert5').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.site-settings-alert5').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.site-settings-alert5').empty();
                 }, 2000);

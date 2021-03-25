@@ -256,10 +256,10 @@ $app['context']['relationship']         = array(
 );
 $app['context']['language']             = LangsNamesFromDB();
 
-function countries($keyx = 'lang_key'){
+function countries($keyx = 'lang_key', $orderby = 'ASC'){
     global $db;
     $lang = GetActiveLang();
-    $genders = $db->where('ref','country')->get('langs',null,array('id,lang_key,options',$lang));
+    $genders = $db->where('ref','country')->orderBy('id', $orderby)->get('langs',null,array('id,lang_key,options',$lang));
     $data = array();
     foreach ($genders as $key => $value) {
         if(isset($value[$lang])) {
@@ -452,8 +452,8 @@ class Dataset{
         }
         return $data;
     }
-    public static function countries($key = 'lang_key'){
-        return countries($key);
+    public static function countries($key = 'lang_key', $orderby = 'ASC'){
+        return countries($key, $orderby);
 
 //        return array(
 //            "AF" => array( 'alpha2'=>'AF', 'alpha3'=>'AFG', 'num'=>'004', 'isd'=> '93', "name" => "Afghanistan", "continent" => "Asia", ),

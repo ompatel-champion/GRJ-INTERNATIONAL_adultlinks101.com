@@ -1488,3 +1488,14 @@ article img {
 input#_located:disabled {
     opacity: 0.2;
 }
+
+
+.twocheckout_modal {padding-top: 20px;}
+.twocheckout_modal .sun_input {margin-bottom: 15px;}
+.twocheckout_modal .sun_input input, .twocheckout_modal .sun_input select {border: 1px solid #e8e8e8;border-radius: 2px;height: 38px;line-height: 14px;transition: all .2s ease-in-out;}
+.twocheckout_modal .sun_input input:focus, .twocheckout_modal .sun_input select:focus {border-color: #03A9F4;}
+.two_check_card {margin: 20px auto 0;max-width: 310px;background-color: #019ACA;padding: 20px 10px 10px;border-radius: 5px;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);}
+.two_check_card > svg {color: white;margin: 0 15px 20px;display: block;width: 35px;height: 35px;}
+.two_check_card .sun_input input::placeholder {color: #fff;opacity: 0.7;}
+.two_check_card .sun_input input, .two_check_card .sun_input select {border: 0;background-color: rgba(0, 0, 0, 0.2) !important;color: white;border-radius: 5px;height: 40px;}
+.two_check_card .sun_input select option {color: #222;background: white;}

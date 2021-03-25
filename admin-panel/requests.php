@@ -123,6 +123,366 @@ if ($f == 'get_country_lang_key' && (auth()->admin == '1' || CheckUserPermission
 }
 
 if ($f == "admin_setting" && (auth()->admin == '1' || CheckUserPermission(auth()->id, $p))) {
+    if ($s == 'ReadNotify') {
+        $db->where('recipient_id',0)->where('admin',1)->where('seen',0)->update('notifications',array('seen' => time()));
+    }
+    if ($s == 'search_in_pages') {
+        $keyword = Secure($_POST['keyword']);
+        $html = '';
+
+        $files = scandir('pages');
+        $not_allowed_files = array('edit-custom-page','edit-lang','edit-movie','edit-profile-field','edit-terms-pages'); 
+        foreach ($files as $key => $file) {
+            if (file_exists('pages/'.$file.'/content.phtml') && !in_array($file, $not_allowed_files)) {
+                
+                $string = file_get_contents('pages/'.$file.'/content.phtml');
+                preg_match_all("@(?s)<h2([^<]*)>([^<]*)<\/h2>@", $string, $matches1);
+
+                if (!empty($matches1) && !empty($matches1[2])) {
+                    foreach ($matches1[2] as $key => $title) {
+                        if (strpos(strtolower($title), strtolower($keyword)) !== false) {
+                            $page_title = '';
+                            preg_match_all("@(?s)<h6([^<]*)>([^<]*)<\/h6>@", $string, $matches3);
+                            if (!empty($matches3) && !empty($matches3[2])) {
+                                foreach ($matches3[2] as $key => $title2) {
+                                    $page_title = $title2;
+                                    break;
+                                }
+                            }
+                            $html .= '<a href="'.Wo_LoadAdminLinkSettings($file).'?highlight='.$keyword.'"><div  style="padding: 5px 2px;">'.$page_title.'</div><div><small style="color: #333;">'.$title.'</small></div></a>';
+                            break;
+                        }
+                    }
+                }
+
+                preg_match_all("@(?s)<label([^<]*)>([^<]*)<\/label>@", $string, $matches2);
+                if (!empty($matches2) && !empty($matches2[2])) {
+                    foreach ($matches2[2] as $key => $lable) {
+                        if (strpos(strtolower($lable), strtolower($keyword)) !== false) {
+                            $page_title = '';
+                            preg_match_all("@(?s)<h6([^<]*)>([^<]*)<\/h6>@", $string, $matches3);
+                            if (!empty($matches3) && !empty($matches3[2])) {
+                                foreach ($matches3[2] as $key => $title2) {
+                                    $page_title = $title2;
+                                    break;
+                                }
+                            }
+
+                            $html .= '<a href="'.Wo_LoadAdminLinkSettings($file).'?highlight='.$keyword.'"><div  style="padding: 5px 2px;">'.$page_title.'</div><div><small style="color: #333;">'.$lable.'</small></div></a>';
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $data = array(
+                    'status' => 200,
+                    'html'   => $html
+                );
+        header("Content-type: application/json");
+        echo json_encode($data);
+        exit();
+
+    }
+    if ($s == 'remove_multi_lang') {
+        if (!empty($_POST['ids'])) {
+            $langs = Wo_LangsNamesFromDB();
+            foreach ($_POST['ids'] as $key => $value) {
+                if (in_array($value, $langs)) {
+                    $lang_name = Secure($value);
+                    $query     = mysqli_query($conn, "ALTER TABLE `langs` DROP COLUMN `$lang_name`");
+                    if ($query) {
+                    }
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'remove_multi_page') {
+        if (!empty($_POST['ids'])) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (!empty($value) && is_numeric($value) && $value > 0) {
+                     Wo_DeleteCustomPage($value);
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'remove_multi_ban') {
+        if (!empty($_POST['ids'])) {
+            foreach ($_POST['ids'] as $key => $value) {
+                Wo_DeleteBanned(Secure($value));
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'remove_multi_gift') {
+        if (!empty($_POST['ids'])) {
+            foreach ($_POST['ids'] as $key => $value) {
+                Wo_DeleteGift(Secure($value));
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'delete_multi_article') {
+        if (!empty($_POST['ids'])) {
+            foreach ($_POST['ids'] as $key => $value) {
+                $article = $db->where('id',Secure($value))->objectbuilder()->getOne('blog');
+                Wo_DeleteArticle($article->id, $article->thumbnail);
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'remove_multi_category') {
+        if (!empty($_POST['ids'])) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (!empty($value) && in_array($value, array_keys(Dataset::blog_categories()))) {
+                    $db->where('lang_key',Secure($value))->delete('langs');
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'remove_multi_sticker') {
+        if (!empty($_POST['ids'])) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (!empty($value) && is_numeric($value)) {
+                    Wo_DeleteSticker(Secure($value));
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'remove_multi_field') {
+        if (!empty($_POST['ids'])) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (!empty($value) && is_numeric($value)) {
+                    DeleteField($value);
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'remove_multi_country') {
+        if (!empty($_POST['ids'])) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (in_array($value, array_keys(Dataset::countries('id')))) {
+                    $db->where('id',Secure($value))->delete('langs');
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'delete_multi_report') {
+        if (!empty($_POST['ids']) && !empty($_POST['type']) && in_array($_POST['type'], array('safe','delete'))) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (is_numeric($value) && $value > 0) {
+                    $report = $db->where('id',Secure($value))->getOne('reports');
+                    if ($_POST['type'] == 'delete') {
+                        Wo_DeleteReport($report['id']);
+                    }
+                    elseif ($_POST['type'] == 'safe') {
+                        Wo_DeleteReport($report['id']);
+                    }
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'remove_multi_request') {
+        if (!empty($_POST['ids']) && !empty($_POST['type']) && in_array($_POST['type'], array('paid','decline'))) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (!empty($value) && is_numeric($value)) {
+                    if ($_POST['type'] == 'decline') {
+                        $get_payment_info = Wo_GetPaymentHistory(Secure($value));
+                        $get_payment_info = ToArray($get_payment_info);
+                        if (!empty($get_payment_info)) {
+                            $id     = $get_payment_info['id'];
+                            $update = mysqli_query($conn, "UPDATE `affiliates_requests` SET status = '2' WHERE id = {$id}");
+                            if ($update) {
+                                $message_body = Emails::parse('emails/payment-declined', array(
+                                    'name' => ($get_payment_info['user'][ 'first_name' ] !== '' ? $get_payment_info['user'][ 'first_name' ] : $get_payment_info['user'][ 'username' ]),
+                                    'amount' => $get_payment_info['amount'],
+                                    'site_name' => $wo['config']['siteName']
+                                ));
+                                $send_message_data = array(
+                                    'from_email' => $wo['config']['siteEmail'],
+                                    'from_name' => $wo['config']['siteName'],
+                                    'to_email' => $get_payment_info['user']['email'],
+                                    'subject' => 'Payment Declined | ' . $wo['config']['siteName'],
+                                    'charSet' => 'utf-8',
+                                    'message_body' => $message_body,
+                                    'is_html' => true
+                                );
+                                $send_message      = SendEmail($send_message_data['to_email'], $send_message_data['subject'], $send_message_data['message_body'], false);
+                                $data['status'] = 200;
+
+                            }
+                        }
+                    }
+                    elseif ($_POST['type'] == 'paid') {
+                        $get_payment_info = Wo_GetPaymentHistory(Secure($value));
+                        $get_payment_info = ToArray($get_payment_info);
+                        if (!empty($get_payment_info)) {
+                            $id     = $get_payment_info['id'];
+                            $update = mysqli_query($conn, "UPDATE `affiliates_requests` SET status = '1' WHERE id = {$id}");
+                            if ($update) {
+                                $message_body = Emails::parse('emails/payment-sent', array(
+                                    'name' => ($get_payment_info['user'][ 'first_name' ] !== '' ? $get_payment_info['user'][ 'first_name' ] : $get_payment_info['user'][ 'username' ]),
+                                    'amount' => $get_payment_info['amount'],
+                                    'site_name' => $wo['config']['siteName']
+                                ));
+                                $send_message_data = array(
+                                    'from_email' => $wo['config']['siteEmail'],
+                                    'from_name' => $wo['config']['siteName'],
+                                    'to_email' => $get_payment_info['user']['email'],
+                                    'to_name' => $get_payment_info['user']['first_name'],
+                                    'subject' => 'Payment Declined | ' . $wo['config']['siteName'],
+                                    'charSet' => 'utf-8',
+                                    'message_body' => $message_body,
+                                    'is_html' => true
+                                );
+                                $send_message      = SendEmail($send_message_data['to_email'], $send_message_data['subject'], $send_message_data['message_body'], false);
+                                if ($send_message) {
+                                    $data['status'] = 200;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'remove_multi_verification') {
+        if (!empty($_POST['ids']) && !empty($_POST['type']) && in_array($_POST['type'], array('verify','delete'))) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (!empty($value) && is_numeric($value)) {
+                    if ($_POST['type'] == 'delete') {
+                        $db->where('id',Secure($value))->delete('verification_requests');
+                    }
+                    elseif ($_POST['type'] == 'verify') {
+                        $verify = $db->where('id',Secure($value))->getOne('verification_requests');
+                        Wo_VerifyUser(Secure($value), $verify['user_id']);
+                    }
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'delete_multi_story') {
+        if (!empty($_POST['ids']) && !empty($_POST['type']) && in_array($_POST['type'], array('activate','deactivate','delete'))) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (!empty($value) && is_numeric($value)) {
+                    if ($_POST['type'] == 'delete') {
+                        Wo_Deletesuccess_stories(Secure($value));
+                    }
+                    elseif ($_POST['type'] == 'activate') {
+                        Wo_Approvesuccess_stories(Secure($value));
+                    }
+                    elseif ($_POST['type'] == 'deactivate') {
+                        Wo_DisApprovesuccess_stories(Secure($value));
+                    }
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'delete_multi_gender') {
+        if (!empty($_POST['ids']) && !empty($_POST['type']) && in_array($_POST['type'], array('enable','disable','delete'))) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (in_array($value, array_keys(Dataset::gender()))) {
+                    if ($_POST['type'] == 'delete') {
+                        if((int)$value == 4526 || (int)$value == 4525 ){
+                            $data['status'] = 300;
+                        }else {
+                            $db->where('lang_key',Secure($value))->delete('langs');
+                            $data['status'] = 200;
+                        }
+                    }
+                    elseif ($_POST['type'] == 'enable') {
+                        $db->where('lang_key',Secure($value))->update('langs', array('options' => 1));
+                    }
+                    elseif ($_POST['type'] == 'disable') {
+                        $db->where('lang_key',Secure($value))->update('langs', array('options' => NULL));
+                    }
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
+    if ($s == 'delete_multi_users') {
+        if (!empty($_POST['ids']) && !empty($_POST['type']) && in_array($_POST['type'], array('activate','deactivate','delete'))) {
+            foreach ($_POST['ids'] as $key => $value) {
+                if (is_numeric($value) && $value > 0) {
+                    if ($_POST['type'] == 'delete') {
+                        $d_user = LoadEndPointResource('users');
+                        if($d_user) {
+                            $deleted = $d_user->delete_user(Secure($value));
+                        }
+                    }
+                    elseif ($_POST['type'] == 'activate') {
+                        $db->where('id', Secure($value));
+
+                        $update_data = array('active' => '1','email_code' => '');
+                        $update = $db->update('users', $update_data);
+                    }
+                    elseif ($_POST['type'] == 'deactivate') {
+                        $db->where('id', Secure($value));
+
+                        $update_data = array('active' => '0','email_code' => '');
+                        $update = $db->update('users', $update_data);
+                    }
+                }
+            }
+            $data = ['status' => 200];
+            header("Content-type: application/json");
+            echo json_encode($data);
+            exit();
+        }
+    }
     if ($s == 'update_user_permission'){
         if(!empty($_GET['user_id'])){
             $_id = (int)Secure($_GET['user_id']);
@@ -284,6 +644,8 @@ if ($f == "admin_setting" && (auth()->admin == '1' || CheckUserPermission(auth()
                     } else if ($realprice == (int)$wo['config']['lifetime_pro_plan']) {
                         $membershipType = 4;
                     }
+                } else if ($receipt['mode'] == 'unlock_photo_private') {
+
                 }
 
 
@@ -300,6 +662,10 @@ if ($f == "admin_setting" && (auth()->admin == '1' || CheckUserPermission(auth()
                     }
                     if($receipt['mode'] == 'membership'){
                         $query_one = mysqli_query($conn, "UPDATE `users` SET `pro_time` = '".time()."', `is_pro` = '1', `pro_type` = '".$membershipType."' WHERE `id` = ".$receipt['user_id']);
+                    }
+
+                    if($receipt['mode'] == 'unlock_photo_private'){
+                        $query_one = mysqli_query($conn, "UPDATE `users` SET `lock_private_photo` = 0 WHERE `id` = {$receipt['user_id']}");
                     }
 
                     $query_one = mysqli_query($conn, "INSERT `payments`(`user_id`,`amount`,`type`,`pro_plan`,`credit_amount`,`via`) VALUES ('{$receipt['user_id']}','{$receipt['price']}','{$receipt['mode']}','{$membershipType}','{$amount}','Bank transfer');");

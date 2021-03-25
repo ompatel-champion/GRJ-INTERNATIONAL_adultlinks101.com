@@ -1,5 +1,12 @@
 (function($){
     $(function(){
+
+        $('button[data-dismiss="modal"]').click(function(){
+            $('#stripe_modal_pro').modal('close');
+            $('#cashfree_modal_box').modal('close');
+        });
+        
+
         $('a[href*="#"].smooth').not('[href="#"]').not('[href="#0"]').on('click', function(event) {
             if (
                 location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
@@ -2101,7 +2108,3 @@ function Next_Picture() {
         $('.match_usr_img_slidr').carousel('next');
     } catch(e) {}
 };
-$('#open_slide').on('click', function(event) {
-    event.preventDefault();
-    $('body').addClass('side_open');
-});

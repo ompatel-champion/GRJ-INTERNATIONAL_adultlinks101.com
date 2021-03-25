@@ -1,4 +1,5 @@
 <?php
+ob_start();
 require_once realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'bootstrap.php';
 $console_log = array();
 $url_action   = (empty(route(1))) ? 'index' : str_replace('-', '', route(1));
@@ -27,9 +28,9 @@ if(GetActiveLang() == 'arabic'){
     $config->is_rtl = true;
 }
 
-if (!isset($_COOKIE['activeLang'])) {
-    setcookie("activeLang", $config->default_language, time() + (10 * 365 * 24 * 60 * 60), '/');
-}
+//if (!isset($_COOKIE['activeLang'])) {
+//    setcookie("activeLang", $config->default_language, time() + (10 * 365 * 24 * 60 * 60), '/');
+//}
 
 // night mode
 if (empty($_COOKIE['mode'])) {
@@ -89,6 +90,23 @@ if( file_exists($light_logo) ){
     }
 }
 
+if (!empty($_GET['ref']) && IS_LOGGED == false){// && !isset($_COOKIE['src'])) {
+    $get_ip = get_ip_address();
+    if (!isset($_SESSION['ref'])){// && !empty($get_ip)) {
+        $_GET['ref'] = Secure($_GET['ref']);
+        $ref_user_id = UserIdFromUsername($_GET['ref']);
+        $user_date = Wo_UserData($ref_user_id);
+        if (!empty($user_date)) {
+            //if (ip_in_range($user_date['ip_address'], '/24') === false && $user_date['ip_address'] != $get_ip) {
+            $_SESSION['ref'] = $user_date['username'];
+            @setcookie('ref', $user_date['username'], time() + 31556926, '/');
+            //}
+        }
+    }
+}
+if (!isset($_COOKIE['src'])) {
+    @setcookie('src', '1', time() + 31556926, '/');
+}
 
 if(IS_LOGGED === true){
 
@@ -152,25 +170,6 @@ if ( $config->maintenance_mode == 1 ) {
     }
 }
 
-
-if (!empty($_GET['ref']) && IS_LOGGED == false && !isset($_COOKIE['src'])) {
-    $get_ip = get_ip_address();
-    if (!isset($_SESSION['ref']) && !empty($get_ip)) {
-        $_GET['ref'] = Secure($_GET['ref']);
-        $ref_user_id = UserIdFromUsername($_GET['ref']);
-        $user_date = Wo_UserData($ref_user_id);
-        if (!empty($user_date)) {
-            if (ip_in_range($user_date['ip_address'], '/24') === false && $user_date['ip_address'] != $get_ip) {
-                $_SESSION['ref'] = $user_date['username'];
-                @setcookie('ref', $user_date['username'], time() + 31556926, '/');
-            }
-        }
-    }
-}
-if (!isset($_COOKIE['src'])) {
-    @setcookie('src', '1', time() + 31556926, '/');
-}
-
 $contoller_file       = $_CONTROLLERS . strtolower($url_action) . '.php';
 if (file_exists($contoller_file)) {
     require_once $contoller_file;
@@ -207,7 +206,7 @@ if (isset($_SESSION['JWT']) && !empty($_SESSION['JWT'])) {
         if ($active_user->admin == "1" || ($active_user->start_up == "3" && $active_user->admin == "0")) {
             $stop = false;
         }
-        if( $stop ){
+        if( $stop === true ){
             $contoller_userverify_file = $_CONTROLLERS . 'steps.php';
             if (file_exists($contoller_userverify_file)) {
                 if (!class_exists('Steps', false)) {
@@ -226,14 +225,21 @@ if (isset($_SESSION['JWT']) && !empty($_SESSION['JWT'])) {
                 'show'
             ));
         } else {
-            if( $config->emailValidation == "1" ) {
-                $contoller_userverify_file = $_CONTROLLERS . 'steps.php';
-                if (file_exists($contoller_userverify_file)) {
-                    if (!class_exists('Steps', false)) {
-                        require_once $contoller_userverify_file;
-                    }
-                    Steps::show();
+//            if( $config->emailValidation == "1" ) {
+//                $contoller_userverify_file = $_CONTROLLERS . 'steps.php';
+//                if (file_exists($contoller_userverify_file)) {
+//                    if (!class_exists('Steps', false)) {
+//                        require_once $contoller_userverify_file;
+//                    }
+//                    Steps::show();
+//                }
+//            }
+            $contoller_index_file = $_CONTROLLERS . 'findmatches.php';
+            if (file_exists($contoller_index_file)) {
+                if( !class_exists('FindMatches',false) ){
+                    require_once $contoller_index_file;
                 }
+                FindMatches::show();
             }
         }
     }

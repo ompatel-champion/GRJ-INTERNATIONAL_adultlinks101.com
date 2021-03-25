@@ -38,6 +38,10 @@
                         <p class="bold"><?php echo __( 'Pay Using' );?></p>
                         <div class="pay_using">
                             <div class="pay_u_btns valign-wrapper">
+                            <?php if(!empty($config->bank_description)){?>
+                                <button onclick="unlock_photo_private_pay_via_bank();" class="btn valign-wrapper bank"><?php echo __( 'Bank Transfer' );?> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M15,14V11H18V9L22,12.5L18,16V14H15M14,7.7V9H2V7.7L8,4L14,7.7M7,10H9V15H7V10M3,10H5V15H3V10M13,10V12.5L11,14.3V10H13M9.1,16L8.5,16.5L10.2,18H2V16H9.1M17,15V18H14V20L10,16.5L14,13V15H17Z"></path></svg></button>
+                            <?php } ?>
+
                             <?php if(!empty($config->paypal_id)){?>
                             <button id="unlock_photo_private_paypal" onclick="clickAndDisable(this);" class="btn paypal valign-wrapper">
                                 <span><?php echo __( 'PayPal' );?></span> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.32,21.97C8.21,21.92 8.08,21.76 8.06,21.65C8.03,21.5 8,21.76 8.66,17.56C9.26,13.76 9.25,13.82 9.33,13.71C9.46,13.54 9.44,13.54 10.94,13.53C12.26,13.5 12.54,13.5 13.13,13.41C16.38,12.96 18.39,11.05 19.09,7.75C19.13,7.53 19.17,7.34 19.18,7.34C19.18,7.33 19.25,7.38 19.33,7.44C20.36,8.22 20.71,9.66 20.32,11.58C19.86,13.87 18.64,15.39 16.74,16.04C15.93,16.32 15.25,16.43 14.05,16.46C13.25,16.5 13.23,16.5 13,16.65C12.83,16.82 12.84,16.79 12.45,19.2C12.18,20.9 12.08,21.45 12.04,21.55C11.97,21.71 11.83,21.85 11.67,21.93L11.56,22H10C8.71,22 8.38,22 8.32,21.97V21.97M3.82,19.74C3.63,19.64 3.5,19.47 3.5,19.27C3.5,19 6.11,2.68 6.18,2.5C6.27,2.32 6.5,2.13 6.68,2.06L6.83,2H10.36C14.27,2 14.12,2 15,2.2C17.62,2.75 18.82,4.5 18.37,7.13C17.87,10.06 16.39,11.8 13.87,12.43C13,12.64 12.39,12.7 10.73,12.7C9.42,12.7 9.32,12.71 9.06,12.85C8.8,13 8.59,13.27 8.5,13.6C8.46,13.67 8.23,15.07 7.97,16.7C7.71,18.33 7.5,19.69 7.5,19.72L7.47,19.78H5.69C4.11,19.78 3.89,19.78 3.82,19.74V19.74Z" /></svg>
@@ -50,6 +54,21 @@
                             <?php if(!empty($config->paysera_password)){?>
                                 <button id="unlock_photo_private_sms_payment" onclick="unlock_photo_private_pay_via_sms();" class="btn valign-wrapper sms"><?php echo __( 'SMS' );?> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17,19V5H7V19H17M17,1A2,2 0 0,1 19,3V21A2,2 0 0,1 17,23H7C5.89,23 5,22.1 5,21V3C5,1.89 5.89,1 7,1H17M9,7H15V9H9V7M9,11H13V13H9V11Z"></path></svg></button>
                             <?php } ?>
+                            <?php if( $config->cashfree_payment === 'yes' && !empty($config->cashfree_client_key) && !empty($config->cashfree_secret_key)){?>
+                                <button id="cashfree_payment" onclick="unlock_photo_private_pay_via_cashfree();" class="btn valign-wrapper cashfree"><?php echo __( 'cashfree' );?> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17,19V5H7V19H17M17,1A2,2 0 0,1 19,3V21A2,2 0 0,1 17,23H7C5.89,23 5,22.1 5,21V3C5,1.89 5.89,1 7,1H17M9,7H15V9H9V7M9,11H13V13H9V11Z"></path></svg></button>
+                            <?php } ?>
+                            <?php if ($config->iyzipay_payment == "yes" && !empty($config->iyzipay_key) && !empty($config->iyzipay_secret_key)) { ?>
+                                <button id="iyzipay-button1" class="btn-cart btn btn-iyzipay-payment" onclick="unlock_photo_private_pay_via_iyzipay();">
+                                    <img src="<?php echo GetMedia('upload/photos/iyzipay.png');?>" width="35" height="35">
+                                    <?php echo __( 'Iyzipay');?>
+                                </button>
+                            <?php } ?>
+                            <?php if ($config->checkout_payment == 'yes') { ?>
+                                <button id="2co_credit" class="btn 2co valign-wrapper"  onclick="unlock_photo_private_pay_via_2co();">
+                                    <?php echo __( '2Checkout' );?> 
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20,8H4V6H20M20,18H4V12H20M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" /></svg>
+                                </button>
+                            <?php } ?>
                         </div>
                         </div>
                     </div>
@@ -58,6 +77,26 @@
         </div>
 
         <script>
+            function unlock_photo_private_pay_via_2co(){
+                $('#2checkout_type').val('unlock_private_photo');
+                $('#2checkout_description').val('<?php echo __( "Unlock Private photo feature");?>');
+                $('#2checkout_price').val(<?php echo (int)$config->lock_private_photo_fee;?>);
+
+                $('#2checkout_modal').modal('open');
+            }
+            function unlock_photo_private_pay_via_cashfree(){
+                $('.cashfree-payment').attr('disabled','true');
+
+                $('#cashfree_type').val('unlock_private_photo');
+                $('#cashfree_description').val('<?php echo __( "Unlock Private photo feature");?>');
+                $('#cashfree_price').val(<?php echo (int)$config->lock_private_photo_fee;?>);
+
+                $("#cashfree_alert").html('');
+                $('.go_pro--modal').fadeOut(250);
+                $('#cashfree_modal_box').modal('open');
+
+                $('.btn-cashfree-payment').removeAttr('disabled');
+            }
             function unlock_photo_private_pay_via_sms() {
                 window.location = window.ajax + 'sms/generate_unlock_private_photo_link';
             }
@@ -77,7 +116,20 @@
                 $('#unlock_photo_private_stripe_number').val('');
                 $('#unlock_photo_private_stripe_cvc').val('');
                 $('#unlock_photo_private_stripe_modal').removeClass('up_rec_img_ready, up_rec_active');
-                $('#unlock_photo_private_stripe_modal').modal('open');
+                //$('#unlock_photo_private_stripe_modal').modal('open');
+
+                $.post(window.ajax + 'stripe/createsession', {
+                    payType: 'unlock_private_photo',
+                    description: '<?php echo __( "Unlock Private photo feature");?>',
+                    price: '<?php echo (int)$config->lock_private_photo_fee;?>'
+                }, function (data) {
+                    if (data.status == 200) {
+                        stripe.redirectToCheckout({ sessionId: data.session_id });
+                    } else {
+                        // $('.modal-body').html('<i class="fa fa-spin fa-spinner"></i> <?php echo __('Payment declined');?> ');
+                    }
+                });
+
             });
 
 
@@ -100,7 +152,18 @@
                 $('#lock_pro_video_stripe_number').val('');
                 $('#lock_pro_video_stripe_cvc').val('');
                 $('#lock_pro_video_stripe_modal').removeClass('up_rec_img_ready, up_rec_active');
-                $('#lock_pro_video_stripe_modal').modal('open');
+                //$('#lock_pro_video_stripe_modal').modal('open');
+                $.post(window.ajax + 'stripe/createsession', {
+                    payType: 'lock_pro_video',
+                    description: '<?php echo __( "Unlock Upload video feature");?>',
+                    price: <?php echo (int)$config->lock_pro_video_fee;?>
+                }, function (data) {
+                    if (data.status == 200) {
+                        stripe.redirectToCheckout({ sessionId: data.session_id });
+                    } else {
+                        // $('.modal-body').html('<i class="fa fa-spin fa-spinner"></i> <?php echo __('Payment declined');?> ');
+                    }
+                });
             });
 
         </script>
@@ -222,6 +285,201 @@
         </div>
 
 
+        <?php if(IS_LOGGED === true){
+            if ($config->checkout_payment == 'yes') { ?>
+                <div class="modal fade " id="2checkout_modal" role="dialog" data-keyboard="false" style="overflow-y: auto;">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span></button>
+                                <h4 class="modal-title"><?php echo __('Check out');?></h4>
+                            </div>
+                            <form class="form form-horizontal" method="post" id="2checkout_form" action="#">
+                                <div class="modal-body twocheckout_modal">
+                                    <div id="2checkout_alert"></div>
+                                    <div class="clear"></div>
+                                    <div class="row">
+                                        <div class="sun_input col s6">
+                                            <input id="card_name" type="text" class="form-control input-md" autocomplete="off" placeholder="<?php echo __('name');?>" value="<?php echo $profile->full_name;?>">
+                                        </div>
+                                        <div class="sun_input col s6">
+                                            <input id="card_address" type="text" class="form-control input-md" autocomplete="off" placeholder="<?php echo __('address');?>" value="<?php echo $profile->address;?>">
+                                        </div>
+                                        <div class="sun_input col s6">
+                                            <input id="card_city" type="text" class="form-control input-md" autocomplete="off" placeholder="<?php echo __('city');?>" value="<?php echo $profile->city;?>">
+                                        </div>
+                                        <div class="sun_input col s6">
+                                            <input id="card_state" type="text" class="form-control input-md" autocomplete="off" placeholder="<?php echo __('state');?>" value="<?php echo $profile->state;?>">
+                                        </div>
+                                        <div class="sun_input col s6">
+                                            <input id="card_zip" type="text" class="form-control input-md" autocomplete="off" placeholder="<?php echo __('zip');?>" value="<?php echo $profile->zip;?>">
+                                        </div>
+                                        <div class="sun_input col s6">
+                                            <select id="card_country" name="card_country" class="form-control">
+                                                <option value="" disabled selected><?php echo __( 'Choose your country' );?></option>
+                                                <?php
+                                                $_countries = Dataset::load('countries');
+                                                foreach( $_countries as $key => $val ){
+                                                    echo '<option value="'. $key .'" data-code="'. $val['isd'] .'">'. $val['name'] .'</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="sun_input col s6">
+                                            <input id="card_email" type="text" class="form-control input-md" autocomplete="off" placeholder="<?php echo __('email');?>" value="<?php echo $profile->email;?>">
+                                        </div>
+                                        <div class="sun_input col s6">
+                                            <input id="card_phone" type="text" class="form-control input-md" autocomplete="off" placeholder="<?php echo __('phone number');?>" value="<?php echo $profile->cc_phone_number;?>">
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <hr>
+                                    <div class="row two_check_card">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20,8H4V6H20M20,18H4V12H20M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z" /></svg>
+                                        <div class="sun_input col s12">
+                                            <input id="_number_" type="text" class="form-control input-md" autocomplete="off" placeholder="<?php echo __('card number');?>">
+                                            <input id="card_number" name="card_number" type="hidden" class="form-control input-md" autocomplete="off">
+                                        </div>
+                                        <div class="sun_input col s4">
+                                            <select id="card_month" name="card_month" type="text" class="form-control input-md" autocomplete="off" placeholder="<?php echo __('month');?> (01)">
+                                                <option value="01">01</option>
+                                                <option value="02">02</option>
+                                                <option value="03">03</option>
+                                                <option value="04">04</option>
+                                                <option value="05">05</option>
+                                                <option value="06">06</option>
+                                                <option value="07">07</option>
+                                                <option value="08">08</option>
+                                                <option value="09">09</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                            </select>
+                                        </div>
+                                        <div class="sun_input col s4 no-padding-both">
+                                            <select id="card_year" name="card_year" type="text" class="form-control input-md" autocomplete="off" placeholder="<?php echo __('year');?> (2021)">
+                                                <?php for ($i=date('Y'); $i <= date('Y')+15; $i++) {  ?>
+                                                    <option value="<?php echo($i) ?>"><?php echo($i) ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="sun_input col s4">
+                                            <input id="card_cvc" name="card_cvc" type="text" class="form-control input-md" autocomplete="off" placeholder="CVC" maxlength="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <input type="hidden" id="2checkout_type" class="hidden" name="payType">
+                                    <input type="hidden" id="2checkout_description" class="hidden" name="description">
+                                    <input type="hidden" id="2checkout_price" class="hidden" name="price">
+                                    <input id="card_token" name="token" type="hidden" value="">
+                                </div>
+                                <div class="clear"></div>
+                                <div class="modal-footer">
+                                    <div class="ball-pulse"><div></div><div></div><div></div></div>
+                                    <button type="button" class="btn btn-main" onclick="tokenRequest()" id="2checkout_btn"><?php echo __('pay');?></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+                    // Called when token created successfully.
+                    var successCallback = function(data) {
+                        var myForm = document.getElementById('2checkout_form');
+                        $.post(window.ajax + 'checkout/createsession', {
+                            card_number: $("#card_number").val(),
+                            card_cvc: $("#card_cvc").val(),
+                            card_month: $("#card_month").val(),
+                            card_year: $("#card_year").val(),
+                            card_name: $("#card_name").val(),
+                            card_address: $("#card_address").val(),
+                            card_city: $("#card_city").val(),
+                            card_state: $("#card_state").val(),
+                            card_zip: $("#card_zip").val(),
+                            card_country: $("#card_country").val(),
+                            card_email: $("#card_email").val(),
+                            card_phone: $("#card_phone").val(),
+                            token: data.response.token.token,
+                            payType: $("#2checkout_type").val(),
+                            description: $("#2checkout_description").val(),
+                            price: $("#2checkout_price").val()
+                        }, function(data, textStatus, xhr) {
+                            $('#2checkout_btn').html("<?php echo __('pay');?>");
+                            $('#2checkout_btn').attr('disabled');
+                            $('#2checkout_btn').removeAttr('disabled');
+                            $('#2checkout_form').find('.ball-pulse').fadeOut(100);
+                            if (data.status == 200) {
+                                window.location.href = data.url;
+                            } else {
+                                $('#2checkout_alert').html("<div class='alert alert-danger'>"+data.error+"</div>");
+                                setTimeout(function () {
+                                    $('#2checkout_alert').html("");
+                                },3000);
+                            }
+                            /*optional stuff to do after success */
+                        });
+                    };
+
+                        // Called when token creation fails.
+                    var errorCallback = function(data) {
+                        $('#2checkout_btn').html("<?php echo __('pay');?>");
+                        $('#2checkout_btn').removeAttr('disabled');
+                        $('#2checkout_form').find('.ball-pulse').fadeOut(100);
+                        if (data.errorCode === 200) {
+                            tokenRequest();
+                        } else {
+                            $('#2checkout_alert').html("<div class='alert alert-danger'>"+data.errorMsg+"</div>");
+                            setTimeout(function () {
+                                $('#2checkout_alert').html("");
+                            },3000);
+                        }
+                    };
+
+                    var tokenRequest = function() {
+                        $('#card_number').val($('#_number_').val());
+                        $('#2checkout_btn').html("<?php echo __('please wait');?>");
+                        $('#2checkout_btn').attr('disabled','true');
+                        if ($("#card_number").val() != '' && $("#card_cvc").val() != '' && $("#card_month").val() != '' && $("#card_year").val() != '' && $("#card_name").val() != '' && $("#card_address").val() != '' && $("#card_city").val() != '' && $("#card_state").val() != '' && $("#card_zip").val() != '' && $("#card_country").val() != 0 && $("#card_email").val() != '' && $("#card_phone").val() != '') {
+                            $('#2checkout_form').find('.ball-pulse').fadeIn(100);
+                            // Setup token request arguments
+                            var args = {
+                                sellerId: "<?php echo($config->checkout_seller_id) ?>",
+                                publishableKey: "<?php echo($config->checkout_publishable_key) ?>",
+                                ccNo: $("#card_number").val(),
+                                cvv: $("#card_cvc").val(),
+                                expMonth: $("#card_month").val(),
+                                expYear: $("#card_year").val()
+                            };
+
+                            // Make the token request
+                            TCO.requestToken(successCallback, errorCallback, args);
+                        }
+                        else{
+                            $('#2checkout_btn').html("<?php echo __('pay');?>");
+                            $('#2checkout_btn').removeAttr('disabled');
+                            $('#2checkout_alert').html("<div class='alert alert-danger'><?php echo __('please check details');?></div>");
+                            setTimeout(function () {
+                                $('#2checkout_alert').html("");
+                            },3000);
+
+                        }
+                    };
+
+                    $(function() {
+                        try {
+                            // Pull in the public encryption key for our environment
+                            TCO.loadPubKey("<?php echo($config->checkout_mode) ?>");
+                        } catch(e) {
+                            console.log(e.toSource());
+                        }
+
+                    });
+                </script>
+
+            <?php } 
+        }?>
+
         <!-- Boost Modal -->
 		<div id="modal_boost" class="modal modal-sm">
 			<div class="modal-content">
@@ -279,7 +537,11 @@
 	<script type="text/javascript">
 		$(document).on('click', '.find_matches_cont > .row > .col.l3 .dt_sections [data-ajax]', function() {
 			$('body').removeClass('side_open');
-		});
+        });
+        $('#open_slide').on('click', function(event) {
+    event.preventDefault();
+    $('body').addClass('side_open');
+});
 		</script>
 
     <?php if( IS_LOGGED == true ){ ?>
@@ -326,5 +588,104 @@
     <?php } ?>
 
 
+<?php if( IS_LOGGED == true ){ ?>
+    <?php if ($config->cashfree_payment == 'yes') { ?>
+        <div class="modal fade" id="cashfree_modal_box" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content add_money_modal add_address_modal">
+                <h5 class="modal-title text-center"><?php echo __('Cashfree');?></h5>
+                <div class="modal-body">
+                    <div id="cashfree_alert"></div>
+                    <form id="cashfree_form" method="post">
+                    <div class="form-group">
+                        <label class="plr15" for="cashfree_name"><?php echo __('name');?></label>
+                        <input class="form-control shop_input" type="text" placeholder="<?php echo __('name');?>" value="<?php echo $profile->full_name; ?>" id="cashfree_name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label class="plr15" for="cashfree_email"><?php echo __('email');?></label>
+                        <input class="form-control shop_input" type="email" placeholder="<?php echo __('email');?>" value="<?php echo $profile->email; ?>" id="cashfree_email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label class="plr15" for="cashfree_phone"><?php echo __('phone_number');?></label>
+                        <input class="form-control shop_input" type="text" placeholder="<?php echo __('phone_number');?>" id="cashfree_phone" name="phone" value="<?php echo $profile->phone_number; ?>">
+                    </div>
+
+                    <input id="cashfree_type" name="cashfree_type" type="hidden" value="">
+                    <input id="cashfree_description" name="cashfree_description" type="hidden" value="">
+                    <input id="cashfree_price" name="cashfree_price" type="hidden" value="0">
+
+                    <div class="modal-footer">
+                        <button class="btn btn-main" id="cashfree_button" type="button" onclick="InitializeCashfree()"><?php echo __('pay');?></button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><?php echo __('cancel');?></button>
+                    </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+        <script>
+        $(document).ready(function(){
+            $('#cashfree_modal_box').modal();
+        });
+        function InitializeCashfree() {
+            $('#cashfree_button').html("<?php echo __('please_wait');?>");
+            $('#cashfree_button').attr('disabled','true');
+            name = $('#cashfree_name').val();
+            phone = $('#cashfree_phone').val();
+            email = $('#cashfree_email').val();
+            amount = $('#cashfree_price').val();
+            description = $('#cashfree_description').val();
+            payType = $('#cashfree_type').val();
+            $.post(window.ajax + 'cashfree/createsession', {
+                name:name,
+                phone:phone,
+                email:email,
+                description:description,
+                price:amount,
+                payType:payType
+            }, function(data) {
+            if (data.status == 200) {
+                $('body').append(data.html);
+                document.getElementById("redirectForm").submit();
+            } else {
+                $('#cashfree_alert').html("<div class='alert alert-danger'>"+data.message+"</div>");
+                setTimeout(function () {
+                $('#cashfree_alert').html("");
+                },3000);
+            }
+            $('#cashfree_button').html("<?php echo __('pay');?>");
+            $('#cashfree_button').removeAttr('disabled');
+            });
+        }
+        </script>
+    <?php } ?>
+
+    <?php if ($config->iyzipay_payment === "yes" && !empty($config->iyzipay_key) && !empty($config->iyzipay_secret_key)) { ?>
+        <div id="iyzipay_content"></div>
+        <script>
+            function unlock_photo_private_pay_via_iyzipay(){
+                $('.btn-iyzipay-payment').attr('disabled','true');
+
+                $.post(window.ajax + 'iyzipay/createsession', {
+                    payType: 'unlock_private_photo',
+                    description: '<?php echo __( "Unlock Private photo feature");?>',
+                    price: <?php echo (int)$config->lock_private_photo_fee;?>
+                }, function(data) {
+                    if (data.status == 200) {
+                        $('#iyzipay_content').html('');
+                        $('#iyzipay_content').html(data.html);
+                    } else {
+                        $('.btn-iyzipay').attr('disabled', false).html("Iyzipay App not set yet.");
+                    }
+                    $('.btn-iyzipay').removeAttr('disabled');
+                    $('.btn-iyzipay').find('span').text("<?php echo __( 'iyzipay');?>");
+                });
+
+                $('.btn-iyzipay-payment').removeAttr('disabled');
+
+            }
+        </script>
+    <?php } ?>
+<?php } ?>
 </body>
 </html>

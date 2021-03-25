@@ -267,8 +267,17 @@ nav .header_user {
                             <?php } ?>
 
                             <?php if( $config->connectivitySystem == "1" && ( Wo_IsFollowRequested($profile->id, (int) $user->id) || Wo_IsFollowRequested( (int) $user->id , $profile->id ) ) ){ ?>
-                                <a href="javascript:void(0);" title="<?php echo __( 'Friend request sent' );?>">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#009688" d="M19,21V19H15V17H19V15L22,18L19,21M10,4A4,4 0 0,1 14,8A4,4 0 0,1 10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M10,14C11.15,14 12.25,14.12 13.24,14.34C12.46,15.35 12,16.62 12,18C12,18.7 12.12,19.37 12.34,20H2V18C2,15.79 5.58,14 10,14Z"></path></svg>
+                                <?php
+                                $flip = '';
+                                    $_title_icon = __( 'Friend request sent' );
+                                    if( Wo_IsFollowRequested($profile->id, (int) $user->id) === true && Wo_IsFollowRequested( (int) $user->id , $profile->id ) === false ){
+                                        $_title_icon = __( 'Friend request received' );
+                                        $flip = ' style="display: block; transform: scale(-1,1);" ';
+                                    }
+                                ?>
+                                
+                                <a href="javascript:void(0);" title="<?php echo $_title_icon;?>">
+                                    <svg <?php echo $flip;?> xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#009688" d="M19,21V19H15V17H19V15L22,18L19,21M10,4A4,4 0 0,1 14,8A4,4 0 0,1 10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M10,14C11.15,14 12.25,14.12 13.24,14.34C12.46,15.35 12,16.62 12,18C12,18.7 12.12,19.37 12.34,20H2V18C2,15.79 5.58,14 10,14Z"></path></svg>
                                 </a>
                             <?php } ?>
 
@@ -278,11 +287,11 @@ nav .header_user {
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#2196f3" d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4C22,2.89 21.1,2 20,2Z"></path></svg>
                             </a>
                             <?php }?>
-                            <?php //if($user->balance >= $config->min_balance_to_send_gift ){?>
+                            <?php if($user->balance >= $config->min_balance_to_send_gift  || isGenderFree($user->gender) === true ){?>
                                 <a href="javascript:void(0);" data-ajax-post="/profile/open_gift_model" data-ajax-params="" data-ajax-callback="callback_open_gift_model" title="<?php echo __( 'Send a gift' );?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#E2574C" d="M22,12V20A2,2 0 0,1 20,22H4A2,2 0 0,1 2,20V12A1,1 0 0,1 1,11V8A2,2 0 0,1 3,6H6.17C6.06,5.69 6,5.35 6,5A3,3 0 0,1 9,2C10,2 10.88,2.5 11.43,3.24V3.23L12,4L12.57,3.23V3.24C13.12,2.5 14,2 15,2A3,3 0 0,1 18,5C18,5.35 17.94,5.69 17.83,6H21A2,2 0 0,1 23,8V11A1,1 0 0,1 22,12M4,20H11V12H4V20M20,20V12H13V20H20M9,4A1,1 0 0,0 8,5A1,1 0 0,0 9,6A1,1 0 0,0 10,5A1,1 0 0,0 9,4M15,4A1,1 0 0,0 14,5A1,1 0 0,0 15,6A1,1 0 0,0 16,5A1,1 0 0,0 15,4M3,8V10H11V8H3M13,8V10H21V8H13Z"></path></svg>
                                 </a>
-                            <?php //}?>
+                            <?php }?>
                             <?php if( isset( $_COOKIE[ 'JWT' ] ) && !empty( $_COOKIE[ 'JWT' ] ) && $profile->admin !== '1' ){ ?>
                                 <a href="javascript:void(0);" data-ajax-post="/useractions/<?php if( isUserBlocked( $profile->id ) ) { echo 'unblock'; } else { echo 'block'; }?>" data-ajax-params="userid=<?php echo $profile->id;?>&web_device_id=<?php echo $profile->web_device_id;?>" data-ajax-callback="<?php if( isUserBlocked( $profile->id ) ) { echo 'callback_unblock'; } else { echo 'callback_block'; }?>" class="block_text" title="<?php if( isUserBlocked( $profile->id ) ) { echo __( 'Unblock' ); } else { echo __( 'Block User' ); }?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#444" d="M12,0A12,12 0 0,1 24,12A12,12 0 0,1 12,24A12,12 0 0,1 0,12A12,12 0 0,1 12,0M12,2A10,10 0 0,0 2,12C2,14.4 2.85,16.6 4.26,18.33L18.33,4.26C16.6,2.85 14.4,2 12,2M12,22A10,10 0 0,0 22,12C22,9.6 21.15,7.4 19.74,5.67L5.67,19.74C7.4,21.15 9.6,22 12,22Z" /></svg>
@@ -395,6 +404,9 @@ nav .header_user {
 
                                                     echo '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="dt_prof_ply_ico"><path fill="currentColor" d="M10,16.5V7.5L16,12M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>';
                                                 }else{
+                                                    if ($value['is_private'] == 0){
+                                                        $avater = $value['full'];
+                                                    }
                                                     echo '<a class="inline" href="' . $avater . '" data-fancybox="gallery" data-id="' . $value['id'] . '" data-private="' . $private . '" data-avater="' . $is_avater . '">';
                                                 }
                                                 echo '<img src="' . $avater . '" alt="' . $profile->username . '">';
@@ -429,7 +441,7 @@ nav .header_user {
                         </h4>
                         <p class="description"><?php echo $profile->location;?></p>
                         <div class="location_map">
-                        <div id="map"></div>
+                            <div id="map"></div>
                         </div>
                     </div>
                     <?php } ?>
@@ -897,10 +909,10 @@ if($is_request_exist > 0){
 <div id="modal_gifts" class="modal modal-fixed-footer">
     <div class="modal-content">
         <h6 class="bold"><?php echo __( 'Send gift costs: ' ) . ' ' . $config->cost_per_gift . ' ' . __( 'credits' );?></h6>
-        <?php //if($user->balance >= $config->cost_per_gift ){?>
-        <div id="gifts_container" <?php if($user->balance >= $config->cost_per_gift ){}else{echo 'class="hide"';}?>></div>
-        <?php //}else{ ?>
-        <div id="buy_credits_gift" <?php if($user->balance >= $config->cost_per_gift ){echo 'class="hide"';}else{}?>>
+        <?php if($user->balance >= $config->cost_per_gift || isGenderFree($user->gender) === true){?>
+        <div id="gifts_container" <?php if($user->balance >= $config->cost_per_gift || isGenderFree($user->gender) === true ){}else{echo 'class="hide"';}?>></div>
+        <?php }else{ ?>
+        <div id="buy_credits_gift" <?php if($user->balance >= $config->cost_per_gift  || isGenderFree($user->gender) === true ){echo 'class="hide"';}else{}?>>
             <div class="credit_bln" style="margin-top: 130px;">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,17V16H9V14H13V13H10A1,1 0 0,1 9,12V9A1,1 0 0,1 10,8H11V7H13V8H15V10H11V11H14A1,1 0 0,1 15,12V15A1,1 0 0,1 14,16H13V17H11Z"></path></svg>
@@ -909,9 +921,9 @@ if($is_request_exist > 0){
                 </div>
             </div>
         </div>
-        <?php //} ?>
+        <?php } ?>
     </div>
-    <?php if($user->balance >= $config->cost_per_gift ){?>
+    <?php if($user->balance >= $config->cost_per_gift  || isGenderFree($user->gender) === true ){?>
     <div class="modal-footer" id="send_gift_footer">
         <button type="button" class="btn-flat waves-effect modal-close"><?php echo __( 'Cancel' );?></button>
         <button data-to="<?php echo $profile->id;?>" class="waves-effect waves-green btn-flat bold" disabled id="btn-send-gift" data-selected=""><?php echo __( 'Send' );?></button>
@@ -1064,9 +1076,9 @@ if( route(2) == 'opengift' && is_numeric(route(3)) ) {
       function initMap() {
         var geocoder = new google.maps.Geocoder();
         var address = "<?php echo $profile->location;?>";
-        
+
         geocoder.geocode( { 'address': address}, function(results, status) {
-        
+
           if (status == google.maps.GeocoderStatus.OK) {
             var latitude = results[0].geometry.location.lat();
             var longitude = results[0].geometry.location.lng();
@@ -1092,4 +1104,4 @@ if( route(2) == 'opengift' && is_numeric(route(3)) ) {
     	float:left;
     	height:205px;
     }
-    </style>
+    </style> 

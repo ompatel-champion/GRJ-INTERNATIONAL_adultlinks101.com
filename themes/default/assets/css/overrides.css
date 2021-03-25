@@ -280,9 +280,10 @@ textarea.materialize-textarea{
     margin-right: 5px;
     margin-bottom: 5px;
     cursor: pointer;
-    user-select: none;
+    /* user-select: none; */
     border-radius: 5px;
     border: 1px solid #9C27B0;
+    pointer-events: inherit!important;
 }
 
 .message.gifimg {

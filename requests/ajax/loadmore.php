@@ -417,7 +417,7 @@ Class Loadmore extends Aj {
             $db->objectBuilder()->join('users u', 'g.from=u.id', 'LEFT')
                 ->where('g.to', self::ActiveUser()->id)
                 ->where('g.from', self::ActiveUser()->id, '<>')
-                ->groupBy('g.from')
+                //->groupBy('g.from')
                 ->orderBy('g.time', 'DESC');
             // to exclude blocked users
             $db->where('g.from NOT IN (SELECT `block_userid` FROM `blocks` WHERE `user_id` = '.self::ActiveUser()->id.')');

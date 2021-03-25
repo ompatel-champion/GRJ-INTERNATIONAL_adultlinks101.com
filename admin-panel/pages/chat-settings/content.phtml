@@ -1,64 +1,81 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>Settings > Video & Audio Settings</h2>
+    <div>
+        <h3>Chat Settings</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Settings</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Chat Settings</li>
+            </ol>
+        </nav>
     </div>
     <!-- Vertical Layout -->
     <div class="row">
         <div class="col-lg-6 col-md-6">
             <div class="card">
-                <div class="header">
-                    <h2>Chat Settings</h2>
-                </div>
-                <div class="body">
-                    <div class="alert alert-success email-settings-alert"></div>
+                <div class="card-body">
+                    <h6 class="card-title">Chat Settings</h6>
+                    <div class="email-settings-alert"></div>
                     <form class="email-settings" method="POST">
                         <label for="user_registration">Message &amp; notifications update interval</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line focused">
-                                <input type="text" name="worker_updateDelay" class="form-control" value="<?php echo $wo['config']['worker_updateDelay']?>">
                                 <label class="form-label">Milliseconds</label>
+                                <input type="text" name="worker_updateDelay" class="form-control" value="<?php echo $wo['config']['worker_updateDelay']?>">
                             </div>
                         </div>
 
                         <label for="paypal_mode">Not Pro Chat user settings</label><div class="clearfix"></div><br>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="not_pro_chat_limit_daily" name="not_pro_chat_limit_daily" class="form-control" value="<?php echo $wo['config']['not_pro_chat_limit_daily'];?>">
                                 <label class="form-label">Max allowed users to chat daily. X Users</label>
+                                <input type="text" id="not_pro_chat_limit_daily" name="not_pro_chat_limit_daily" class="form-control" value="<?php echo $wo['config']['not_pro_chat_limit_daily'];?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="not_pro_chat_credit" name="not_pro_chat_credit" class="form-control" value="<?php echo $wo['config']['not_pro_chat_credit'];?>">
                                 <label class="form-label">Credit per user chat. X Points.</small></label>
+                                <input type="text" id="not_pro_chat_credit" name="not_pro_chat_credit" class="form-control" value="<?php echo $wo['config']['not_pro_chat_credit'];?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="not_pro_chat_stickers_limit" name="not_pro_chat_stickers_limit" class="form-control" value="<?php echo $wo['config']['not_pro_chat_stickers_limit'];?>">
                                 <label class="form-label">Max Stickers to show. X Stickers</label>
+                                <input type="text" id="not_pro_chat_stickers_limit" name="not_pro_chat_stickers_limit" class="form-control" value="<?php echo $wo['config']['not_pro_chat_stickers_limit'];?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="not_pro_chat_stickers_credit" name="not_pro_chat_stickers_credit" class="form-control" value="<?php echo $wo['config']['not_pro_chat_stickers_credit'];?>">
                                 <label class="form-label">Credit to show more stickers. X Points.</small></label>
+                                <input type="text" id="not_pro_chat_stickers_credit" name="not_pro_chat_stickers_credit" class="form-control" value="<?php echo $wo['config']['not_pro_chat_stickers_credit'];?>">
                             </div>
                         </div>
                         <label for="message_request_system">Message request system.</label>
                         <div class="form-group">
-                            <input type="radio" name="message_request_system" id="message_request_system-enabled" value="on" <?php echo ($wo['config']['message_request_system'] == 'on') ? 'checked': '';?>>
-                            <label for="message_request_system-enabled">Yes</label>
-                            <input type="radio" name="message_request_system" id="message_request_system-disabled" value="off" <?php echo ($wo['config']['message_request_system'] == 'off') ? 'checked': '';?>>
-                            <label for="message_request_system-disabled" class="m-l-20">No</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="message_request_system" id="message_request_system-enabled" value="on" <?php echo ($wo['config']['message_request_system'] == 'on') ? 'checked': '';?>>
+                                <label class="form-check-label" for="message_request_system-enabled">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="message_request_system" id="message_request_system-disabled" value="off" <?php echo ($wo['config']['message_request_system'] == 'off') ? 'checked': '';?>>
+                                <label class="form-check-label" for="message_request_system-disabled" class="m-l-20">No</label>
+                            </div>
                         </div>
 
                         <label for="spam_warning">Chat spam system</label>
                         <div class="form-group">
-                            <input type="radio" name="spam_warning" id="spam_warning-enabled" value="1" <?php echo ($wo['config']['spam_warning'] == '1') ? 'checked': '';?>>
-                            <label for="spam_warning-enabled">Enabled</label>
-                            <input type="radio" name="spam_warning" id="spam_warning-disabled" value="0" <?php echo ($wo['config']['spam_warning'] == '0') ? 'checked': '';?>>
-                            <label for="spam_warning-disabled" class="m-l-20">Disabled</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="spam_warning" id="spam_warning-enabled" value="1" <?php echo ($wo['config']['spam_warning'] == '1') ? 'checked': '';?>>
+                                <label class="form-check-label" for="spam_warning-enabled">Enabled</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="spam_warning" id="spam_warning-disabled" value="0" <?php echo ($wo['config']['spam_warning'] == '0') ? 'checked': '';?>>
+                                <label class="form-check-label" for="spam_warning-disabled" class="m-l-20">Disabled</label>
+                            </div>
                         </div>
 
                         <div class="clearfix"></div>
@@ -90,7 +107,7 @@ $(function() {
             if (data.status == 200) {
                 form_email_settings.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.email-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.email-settings-alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.email-settings-alert').empty();
                 }, 2000);

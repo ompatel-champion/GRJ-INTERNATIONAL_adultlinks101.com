@@ -54,11 +54,11 @@ if (isset($_GET['code']) && !empty($_GET['code'])) {
                     $user_uniq_id   = ($user->isUsernameExists($id) === false) ? $id : 'u_' . $id;
                     $password   = rand(111111, 999999);
                     $password_hash   = password_hash($password, PASSWORD_DEFAULT, array('cost' => 11));
-                    $gender       = (isset($user_data['gender'])) ? Secure($user_data['gender'], 0) : 'male';
+                    $gender       = (isset($user_data['gender'])) ? $user_data['gender'] : 'male';
                     if($gender == 'male'){
                         $gender = 0;
                     }else{
-                        $gender = 1;
+                        $gender = 4526;
                     }
                     $re_data    = array(
                         'username' => Secure($user_uniq_id, 0),

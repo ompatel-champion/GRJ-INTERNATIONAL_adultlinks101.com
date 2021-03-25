@@ -83,7 +83,7 @@ nav .header_user {
                     <label for="username"><?php echo __( 'Username' );?></label>
                 </div>
                 <div class="input-field col s6 xs12">
-                    <input id="email" name="email" type="text" class="validate" value="<?php echo $profile->email;?>" readonly>
+                    <input id="email" name="email" type="text" class="validate" value="<?php echo $profile->email;?>">
                     <label for="email"><?php echo __( 'Email' );?></label>
                 </div>
             </div>

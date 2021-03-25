@@ -222,7 +222,7 @@
 						<h5><?php echo __( 'Location' );?></h5>
 						<p class="to_intrst_des"><?php echo $profile->location;?></p>
 						<div class="to_location_map">
-							<img src="https://maps.googleapis.com/maps/api/staticmap?center=<?php echo urlencode($profile->location);?>&zoom=13&size=600x205&maptype=roadmap&key=AIzaSyBFZHfyVXQ0H1Fh30rrZEOUgAi55_zYbZE" alt="<?php echo __( 'Location' );?>" />
+							<img src="https://maps.googleapis.com/maps/api/staticmap?center=<?php echo urlencode($profile->location);?>&zoom=13&size=600x205&maptype=roadmap&key=AIzaSyDrUJRAll-JEBxWRh_q51em1EAv6IQ6nOo" alt="<?php echo __( 'Location' );?>" />
 						</div>
 					</div>
 				<?php } ?>

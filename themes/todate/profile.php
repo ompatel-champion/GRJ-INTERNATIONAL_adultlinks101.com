@@ -226,7 +226,8 @@
 						<h5><?php echo __( 'Location' );?></h5>
 						<p class="to_intrst_des"><?php echo $profile->location;?></p>
 						<div class="to_location_map">
-						<div id="map"></div>
+						    <div id="map"></div>
+				<!--<img src="https://maps.googleapis.com/maps/api/staticmap?center=<?php echo urlencode($profile->location);?>&zoom=13&size=600x205&maptype=roadmap&key=AIzaSyDrUJRAll-JEBxWRh_q51em1EAv6IQ6nOo" alt="<?php echo __( 'Location' );?>" />-->
 						</div>
 					</div>
 				<?php } ?>
@@ -798,7 +799,7 @@ if( route(2) == 'opengift' && is_numeric(route(3)) ) {
         </div>
     <?php
     }
-	?>
+    ?>
     <script>
       function initMap() {
         var geocoder = new google.maps.Geocoder();

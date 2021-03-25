@@ -1,0 +1,4 @@
+[22-Mar-2021 08:56:49 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function __() in /home/adultone/public_html/themes/love/index.php:6
+Stack trace:
+#0 {main}
+  thrown in /home/adultone/public_html/themes/love/index.php on line 6

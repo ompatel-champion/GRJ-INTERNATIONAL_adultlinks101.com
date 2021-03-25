@@ -1,52 +1,61 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>Settings > Site Settings</h2>
+    <div>
+        <h3>Site Settings</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Settings</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Site Settings</li>
+            </ol>
+        </nav>
     </div>
     <!-- Vertical Layout -->
     <div class="row">
         <div class="col-lg-6 col-md-6 float-left">
             <div class="card">
-                <div class="header">
-                    <h2>Website Settings</h2>
-                </div>
-                <div class="body">
-                    <div class="alert alert-success site-settings-alert"></div>
+                <div class="card-body">
+                    <h6 class="card-title">Website Settings</h6>
+                    <div class="site-settings-alert"></div>
                     <form class="site-settings" method="POST">
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="default_title" name="default_title" class="form-control" value="<?php echo $wo['config']['default_title']; ?>">
                                 <label class="form-label">Site Title</label>
+                                <input type="text" id="default_title" name="default_title" class="form-control" value="<?php echo $wo['config']['default_title']; ?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="site_name" name="site_name" class="form-control" value="<?php echo $wo['config']['site_name']; ?>">
                                 <label class="form-label">Site Name</label>
+                                <input type="text" id="site_name" name="site_name" class="form-control" value="<?php echo $wo['config']['site_name']; ?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="siteEmail" name="siteEmail" class="form-control" value="<?php echo $wo['config']['siteEmail']; ?>">
                                 <label class="form-label">Site E-mail</label>
+                                <input type="text" id="siteEmail" name="siteEmail" class="form-control" value="<?php echo $wo['config']['siteEmail']; ?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="meta_keywords" name="meta_keywords" class="form-control" value="<?php echo $wo['config']['meta_keywords']; ?>">
                                 <label class="form-label">Site Keywords</label>
+                                <input type="text" id="meta_keywords" name="meta_keywords" class="form-control" value="<?php echo $wo['config']['meta_keywords']; ?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <textarea name="meta_description" id="meta_description" class="form-control" cols="30" rows="5"><?php echo $wo['config']['meta_description']; ?></textarea>
                                 <label class="form-label">Site Description</label>
+                                <textarea name="meta_description" id="meta_description" class="form-control" cols="30" rows="5"><?php echo $wo['config']['meta_description']; ?></textarea>
                             </div>
                         </div>
 
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="skey" name="skey" class="form-control" value="<?php global $serverkey; echo $serverkey; ?>">
                                 <label class="form-label">Server Key</label>
+                                <input type="text" id="skey" name="skey" class="form-control" value="<?php global $serverkey; echo $serverkey; ?>">
                             </div>
                         </div>
 
@@ -55,34 +64,33 @@
                     </form>
                 </div>
             </div>
-        </div>
-
-        <div class="col-lg-6 col-md-6 float-right">
             <div class="card">
-                <div class="header">
-                    <h2>Daily Earning Credit Settings</h2>
-                </div>
-                <div class="body">
-                    <div class="alert alert-success credit_earn_system-settings-alert"></div>
+                <div class="card-body">
+                    <h6 class="card-title">Daily Earning Credit Settings</h6>
+                    <div class="credit_earn_system-settings-alert"></div>
                     <form class="credit_earn_system-settings" method="POST">
                         <label for="credit_earn_system">Enable credit earning system.</label>
                         <div class="form-group">
-                            <input type="radio" name="credit_earn_system" id="credit_earn_system-enabled" value="1" <?php echo ($wo['config']['credit_earn_system'] == 1) ? 'checked': '';?>>
-                            <label for="credit_earn_system-enabled">Enable</label>
-                            <input type="radio" name="credit_earn_system" id="credit_earn_system-disabled" value="0" <?php echo ($wo['config']['credit_earn_system'] == 0) ? 'checked': '';?>>
-                            <label for="credit_earn_system-disabled" class="m-l-20">Disable</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="credit_earn_system" id="credit_earn_system-enabled" value="1" <?php echo ($wo['config']['credit_earn_system'] == 1) ? 'checked': '';?>>
+                                <label class="form-check-label" for="credit_earn_system-enabled">Enable</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="credit_earn_system" id="credit_earn_system-disabled" value="0" <?php echo ($wo['config']['credit_earn_system'] == 0) ? 'checked': '';?>>
+                                <label class="form-check-label" for="credit_earn_system-disabled" class="m-l-20">Disable</label>
+                            </div>
                         </div>
 
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="credit_earn_max_days" name="credit_earn_max_days" class="form-control" value="<?php echo $wo['config']['credit_earn_max_days']; ?>">
                                 <label class="form-label">User must open site daily for</label>
+                                <input type="text" id="credit_earn_max_days" name="credit_earn_max_days" class="form-control" value="<?php echo $wo['config']['credit_earn_max_days']; ?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="credit_earn_day_amount" name="credit_earn_day_amount" class="form-control" value="<?php echo $wo['config']['credit_earn_day_amount']; ?>">
                                 <label class="form-label">To earn for each day</label>
+                                <input type="text" id="credit_earn_day_amount" name="credit_earn_day_amount" class="form-control" value="<?php echo $wo['config']['credit_earn_day_amount']; ?>">
                             </div>
                         </div>
 
@@ -96,13 +104,11 @@
 
         <div class="col-lg-6 col-md-6 float-right">
             <div class="card">
-                <div class="header">
-                    <h2>Other Settings</h2>
-                </div>
-                <div class="body">
-                    <div class="alert alert-success other-settings-alert"></div>
+                <div class="card-body">
+                    <h6 class="card-title">Other Settings</h6>
+                    <div class="other-settings-alert"></div>
                     <form class="other-settings" method="POST">
-                        <label for="defualtLang">Default Language</label>
+                        <label class="form-check-label" for="defualtLang">Default Language</label>
                         <select class="form-control show-tick" id="default_language" name="default_language">
                             <?php echo DatasetGetSelect( $wo['config']['default_language'], "language", "Default Language" );?>
                         </select>
@@ -112,27 +118,35 @@
                         <br>
                         <label for="verification_on_signup">Submit verification docs on sign up</label>
                         <div class="form-group">
-                            <input type="radio" name="verification_on_signup" id="verification_on_signup-enabled" value="1" <?php echo ($wo['config']['verification_on_signup'] == 1) ? 'checked': '';?>>
-                            <label for="verification_on_signup-enabled">Enable</label>
-                            <input type="radio" name="verification_on_signup" id="verification_on_signup-disabled" value="0" <?php echo ($wo['config']['verification_on_signup'] == 0) ? 'checked': '';?>>
-                            <label for="verification_on_signup-disabled" class="m-l-20">Disable</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="verification_on_signup" id="verification_on_signup-enabled" value="1" <?php echo ($wo['config']['verification_on_signup'] == 1) ? 'checked': '';?>>
+                                <label class="form-check-label" for="verification_on_signup-enabled">Enable</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="verification_on_signup" id="verification_on_signup-disabled" value="0" <?php echo ($wo['config']['verification_on_signup'] == 0) ? 'checked': '';?>>
+                                <label class="form-check-label" for="verification_on_signup-disabled" class="m-l-20">Disable</label>
+                            </div>
                         </div>
 
 
                         <label for="review_media_files">Review Media files</label>
                         <div class="form-group">
-                            <input type="radio" name="review_media_files" id="review_media_files-enabled" value="1" <?php echo ($wo['config']['review_media_files'] == 1) ? 'checked': '';?>>
-                            <label for="review_media_files-enabled">Enable</label>
-                            <input type="radio" name="review_media_files" id="review_media_files-disabled" value="0" <?php echo ($wo['config']['review_media_files'] == 0) ? 'checked': '';?>>
-                            <label for="review_media_files-disabled" class="m-l-20">Disable</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="review_media_files" id="review_media_files-enabled" value="1" <?php echo ($wo['config']['review_media_files'] == 1) ? 'checked': '';?>>
+                                <label class="form-check-label" for="review_media_files-enabled">Enable</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="review_media_files" id="review_media_files-disabled" value="0" <?php echo ($wo['config']['review_media_files'] == 0) ? 'checked': '';?>>
+                                <label class="form-check-label" for="review_media_files-disabled" class="m-l-20">Disable</label>
+                            </div>
                         </div>
 
                         <label for="show_user_on_homepage">Photo settings</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" name="max_photo_per_user" class="form-control" value="<?php echo $wo['config']['max_photo_per_user']?>">
                                 <label class="form-label">User photo upload Limit</label>
                                 <small style="color: green;">PRO Users, Can upload unlimited photos</small>
+                                <input type="text" name="max_photo_per_user" class="form-control" value="<?php echo $wo['config']['max_photo_per_user']?>">
                             </div>
                         </div>
 
@@ -141,13 +155,17 @@
                         <br>
                         <label for="lock_private_photo">Lock private photos</label>
                         <div class="form-group">
-                            <input type="radio" name="lock_private_photo" id="lock_private_photo-enabled" value="1" <?php echo ($wo['config']['lock_private_photo'] == 1) ? 'checked': '';?>>
-                            <label for="lock_private_photo-enabled">Enable</label>
-                            <input type="radio" name="lock_private_photo" id="lock_private_photo-disabled" value="0" <?php echo ($wo['config']['lock_private_photo'] == 0) ? 'checked': '';?>>
-                            <label for="lock_private_photo-disabled" class="m-l-20">Disable</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="lock_private_photo" id="lock_private_photo-enabled" value="1" <?php echo ($wo['config']['lock_private_photo'] == 1) ? 'checked': '';?>>
+                                <label class="form-check-label" for="lock_private_photo-enabled">Enable</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="lock_private_photo" id="lock_private_photo-disabled" value="0" <?php echo ($wo['config']['lock_private_photo'] == 0) ? 'checked': '';?>>
+                                <label class="form-check-label" for="lock_private_photo-disabled" class="m-l-20">Disable</label>
+                            </div>
                         </div>
 
-                        <label for="show_user_on_homepage">Unlock Fee</label>
+                        <label class="form-check-label" for="show_user_on_homepage">Unlock Fee</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <input type="text" name="lock_private_photo_fee" class="form-control" value="<?php echo $wo['config']['lock_private_photo_fee']?>">
@@ -159,10 +177,14 @@
                         <br>
                         <label for="lock_pro_video">Lock upload video fro pro users</label>
                         <div class="form-group">
-                            <input type="radio" name="lock_pro_video" id="lock_pro_video-enabled" value="1" <?php echo ($wo['config']['lock_pro_video'] == 1) ? 'checked': '';?>>
-                            <label for="lock_pro_video-enabled">Enable</label>
-                            <input type="radio" name="lock_pro_video" id="lock_pro_video-disabled" value="0" <?php echo ($wo['config']['lock_pro_video'] == 0) ? 'checked': '';?>>
-                            <label for="lock_pro_video-disabled" class="m-l-20">Disable</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="lock_pro_video" id="lock_pro_video-enabled" value="1" <?php echo ($wo['config']['lock_pro_video'] == 1) ? 'checked': '';?>>
+                                <label class="form-check-label" for="lock_pro_video-enabled">Enable</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="lock_pro_video" id="lock_pro_video-disabled" value="0" <?php echo ($wo['config']['lock_pro_video'] == 0) ? 'checked': '';?>>
+                                <label class="form-check-label" for="lock_pro_video-disabled" class="m-l-20">Disable</label>
+                            </div>
                         </div>
 
                         <label for="show_user_on_homepage">Unlock Fee</label>
@@ -177,10 +199,14 @@
                         <br>
                         <label for="show_user_on_homepage">Show users on homepage</label>
                         <div class="form-group">
-                            <input type="radio" name="show_user_on_homepage" id="show_user_on_homepage-enabled" value="1" <?php echo ($wo['config']['show_user_on_homepage'] == 1) ? 'checked': '';?>>
-                            <label for="show_user_on_homepage-enabled">Enable</label>
-                            <input type="radio" name="show_user_on_homepage" id="show_user_on_homepage-disabled" value="0" <?php echo ($wo['config']['show_user_on_homepage'] == 0) ? 'checked': '';?>>
-                            <label for="show_user_on_homepage-disabled" class="m-l-20">Disable</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="show_user_on_homepage" id="show_user_on_homepage-enabled" value="1" <?php echo ($wo['config']['show_user_on_homepage'] == 1) ? 'checked': '';?>>
+                                <label class="form-check-label" for="show_user_on_homepage-enabled">Enable</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="show_user_on_homepage" id="show_user_on_homepage-disabled" value="0" <?php echo ($wo['config']['show_user_on_homepage'] == 0) ? 'checked': '';?>>
+                                <label class="form-check-label" for="show_user_on_homepage-disabled" class="m-l-20">Disable</label>
+                            </div>
                         </div>
 
                         <label for="showed_user">Showed users</label>
@@ -200,15 +226,19 @@
                         <br>
                         <label for="connectivitySystem">Friends System</label>
                         <div class="form-group">
-                            <input type="radio" name="connectivitySystem" id="connectivitySystem-enabled" value="1" <?php echo ($wo['config']['connectivitySystem'] == 1) ? 'checked': '';?>>
-                            <label for="connectivitySystem-enabled">Enable</label>
-                            <input type="radio" name="connectivitySystem" id="connectivitySystem-disabled" value="0" <?php echo ($wo['config']['connectivitySystem'] == 0) ? 'checked': '';?>>
-                            <label for="connectivitySystem-disabled" class="m-l-20">Disable</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="connectivitySystem" id="connectivitySystem-enabled" value="1" <?php echo ($wo['config']['connectivitySystem'] == 1) ? 'checked': '';?>>
+                                <label class="form-check-label" for="connectivitySystem-enabled">Enable</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="connectivitySystem" id="connectivitySystem-disabled" value="0" <?php echo ($wo['config']['connectivitySystem'] == 0) ? 'checked': '';?>>
+                                <label class="form-check-label" for="connectivitySystem-disabled" class="m-l-20">Disable</label>
+                            </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" name="connectivitySystemLimit" class="form-control" value="<?php echo $wo['config']['connectivitySystemLimit']?>">
                                 <label class="form-label">Friends System Limit</label>
+                                <input type="text" name="connectivitySystemLimit" class="form-control" value="<?php echo $wo['config']['connectivitySystemLimit']?>">
                             </div>
                         </div>
 
@@ -225,28 +255,28 @@
                         <br>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="facebook_url" name="facebook_url" class="form-control" value="<?php echo $wo['config']['facebook_url']; ?>">
                                 <label class="form-label">Facebook</label>
+                                <input type="text" id="facebook_url" name="facebook_url" class="form-control" value="<?php echo $wo['config']['facebook_url']; ?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="twitter_url" name="twitter_url" class="form-control" value="<?php echo $wo['config']['twitter_url']; ?>">
                                 <label class="form-label">Twitter</label>
+                                <input type="text" id="twitter_url" name="twitter_url" class="form-control" value="<?php echo $wo['config']['twitter_url']; ?>">
                             </div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" id="google_url" name="google_url" class="form-control" value="<?php echo $wo['config']['google_url']; ?>">
                                 <label class="form-label">Google</label>
+                                <input type="text" id="google_url" name="google_url" class="form-control" value="<?php echo $wo['config']['google_url']; ?>">
                             </div>
                         </div>
                         <div class="clearfix"></div>
                         <br>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <textarea name="google_tag_code" id="google_tag_code" class="form-control" cols="30" rows="5"><?php echo $wo['config']['google_tag_code']; ?></textarea>
                                 <label class="form-label">Google Tag Code</label>
+                                <textarea name="google_tag_code" id="google_tag_code" class="form-control" cols="30" rows="5"><?php echo $wo['config']['google_tag_code']; ?></textarea>
                             </div>
                             <small>You can create account <a href="https://tagmanager.google.com/#/home" target="_blank">here</a>. </small>
 
@@ -274,7 +304,7 @@ $(function() {
             if (data.status == 200) {
                 form_site_settings.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.credit_earn_system-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.credit_earn_system-settings-alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.credit_earn_system-settings-alert').empty();
                 }, 2000);
@@ -293,7 +323,7 @@ $(function() {
             if (data.status == 200) {
                 form_site_settings.find('button').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.site-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.site-settings-alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.site-settings-alert').empty();
                 }, 2000);
@@ -311,7 +341,7 @@ $(function() {
             if (data.status == 200) {
                 form_other_settings.find('.waves-effect').text('Save');
                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                $('.other-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                $('.other-settings-alert').html('<div class="alert alert-success"><i class="fa fa-check"></i> Settings updated successfully</div>');
                 setTimeout(function () {
                     $('.other-settings-alert').empty();
                 }, 2000);

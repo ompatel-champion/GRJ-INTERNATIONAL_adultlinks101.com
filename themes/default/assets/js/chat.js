@@ -622,7 +622,6 @@ function open_private_conversation( data ) {
                         $('#chat_message_form').attr('method','POST');
                         $('#chat_message_form').replaceWith(data.form).show();
                         $('#to_message').val($('#dfgetevxd').val());
-
                         $('#dt_emoji').addClass('hide');
 
                         $("#dt_emoji").emojioneArea({
@@ -655,7 +654,7 @@ function open_private_conversation( data ) {
                         //head.removeChild(script);
                         $('#dt_emoji').removeClass('hide');
                         $('.chat_f_send').removeClass('hide');
-
+                        $('#dt_emoji').css({'display': 'block'});
                     }else{
                         M.toast({html: data.message});
                     }

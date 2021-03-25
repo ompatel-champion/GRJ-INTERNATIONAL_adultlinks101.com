@@ -98,6 +98,6 @@
         });
     </script>
     <?php } ?>
-    GRJ-INT
+    GRJ-Placeholder
 </body>
 </html>

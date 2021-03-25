@@ -24,7 +24,7 @@
 ?>
     <div class="panel-heading" role="tab" id="headingOne_<?php echo $id;?>">
         <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion_<?php echo $id;?>" href="#collapseOne_<?php echo $id;?>" aria-expanded="true" aria-controls="collapseOne_<?php echo $id;?>" class="">
+            <a role="button" data-toggle="collapse" data-parent="#accordion_<?php echo $id;?>" href="javascript:void(0)" aria-expanded="true" aria-controls="collapseOne_<?php echo $id;?>" onclick="OpenTab('collapseOne_<?php echo $id;?>')">
                 <?php echo ucfirst($page_name);?>
             </a>
         </h4>
@@ -36,20 +36,23 @@
             <form class="site-settings" method="POST">
                 <div class="form-group form-float">
                     <div class="form-line">
-                        <input type="text" id="default_title" name="default_title" class="form-control" value="<?php echo $title; ?>">
                         <label class="form-label">Title</label>
+                        <input type="text" id="default_title" name="default_title" class="form-control" value="<?php echo $title; ?>">
+                        
                     </div>
                 </div>
                 <div class="form-group form-float">
                     <div class="form-line">
-                        <input type="text" id="meta_keywords" name="meta_keywords" class="form-control" value="<?php echo $keyword; ?>">
                         <label class="form-label">Keywords</label>
+                        <input type="text" id="meta_keywords" name="meta_keywords" class="form-control" value="<?php echo $keyword; ?>">
+                        
                     </div>
                 </div>
                 <div class="form-group form-float">
                     <div class="form-line">
-                        <textarea name="meta_description" id="meta_description" class="form-control" cols="30" rows="2"><?php echo $description; ?></textarea>
                         <label class="form-label">Description</label>
+                        <textarea name="meta_description" id="meta_description" class="form-control" cols="30" rows="2"><?php echo $description; ?></textarea>
+                        
                     </div>
                 </div>
                 <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
@@ -60,47 +63,60 @@
     </div>
 <?php }?>
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>Pages > SEO</h2>
+    <div>
+        <h3>SEO</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Pages</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">SEO</li>
+            </ol>
+        </nav>
     </div>
     <!-- Vertical Layout -->
     <div class="row">
         <div class="col-lg-6 col-md-6 float-left">
             <div class="card">
-                <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
-                    <div class="panel panel-primary">
-                        <?php echo writePage('index');?>
-                        <?php echo writePage('find-matches');?>
-                        <?php echo writePage('about');?>
-                        <?php echo writePage('contact');?>
-                        <?php echo writePage('credit');?>
-                        <?php echo writePage('disliked');?>
-                        <?php echo writePage('forgot');?>
-                        <?php echo writePage('friends');?>
-                        <?php echo writePage('hot');?>
-                        <?php echo writePage('interest');?>
-                        <?php echo writePage('liked');?>
-                        <?php echo writePage('likes');?>
-                        <?php echo writePage('login');?>
-                        <?php echo writePage('popularity');?>
-                        <?php echo writePage('privacy');?>
-                        <?php echo writePage('pro');?>
-                        <?php echo writePage('register');?>
-                        <?php echo writePage('reset');?>
-                        <?php echo writePage('story');?>
-                        <?php echo writePage('stories');?>
-                        <?php echo writePage('terms');?>
-                        <?php echo writePage('visits');?>
-                        <?php echo writePage('maintenance');?>
-                        <?php echo writePage('transactions');?>
-                        <?php echo writePage('userverify');?>
-                        <?php echo writePage('verifymail');?>
-                        <?php echo writePage('verifymailotp');?>
-                        <?php echo writePage('unusual-login');?>
-                        <?php echo writePage('verifyphone');?>
-                        <?php echo writePage('verifyphoneotp');?>
-                        <?php echo writePage('steps');?>
-                        <?php echo writePage('video-call');?>
+                <div class="card-body">
+                    <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-primary">
+                            <?php echo writePage('index');?>
+                            <?php echo writePage('find-matches');?>
+                            <?php echo writePage('about');?>
+                            <?php echo writePage('contact');?>
+                            <?php echo writePage('credit');?>
+                            <?php echo writePage('disliked');?>
+                            <?php echo writePage('forgot');?>
+                            <?php echo writePage('friends');?>
+                            <?php echo writePage('hot');?>
+                            <?php echo writePage('interest');?>
+                            <?php echo writePage('liked');?>
+                            <?php echo writePage('likes');?>
+                            <?php echo writePage('login');?>
+                            <?php echo writePage('popularity');?>
+                            <?php echo writePage('privacy');?>
+                            <?php echo writePage('pro');?>
+                            <?php echo writePage('register');?>
+                            <?php echo writePage('reset');?>
+                            <?php echo writePage('story');?>
+                            <?php echo writePage('stories');?>
+                            <?php echo writePage('terms');?>
+                            <?php echo writePage('visits');?>
+                            <?php echo writePage('maintenance');?>
+                            <?php echo writePage('transactions');?>
+                            <?php echo writePage('userverify');?>
+                            <?php echo writePage('verifymail');?>
+                            <?php echo writePage('verifymailotp');?>
+                            <?php echo writePage('unusual-login');?>
+                            <?php echo writePage('verifyphone');?>
+                            <?php echo writePage('verifyphoneotp');?>
+                            <?php echo writePage('steps');?>
+                            <?php echo writePage('video-call');?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,6 +125,9 @@
     </div>
     <!-- #END# Vertical Layout -->
 <script>
+    function OpenTab(id) {
+        $('#'+id).toggle();
+    }
 $(function() {
     var form_site_settings = $('form.site-settings');
     form_site_settings.ajaxForm({

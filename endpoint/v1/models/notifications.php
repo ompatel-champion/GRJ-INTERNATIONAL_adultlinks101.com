@@ -188,7 +188,12 @@ class Notifications {
                 'url',
                 'created_at'
             ));
+            $notification_text = Dataset::load('notification');
             foreach ($notifications as $key => $value) {
+                if (isset($notification_text[$value->type])) {
+                    $text = $notification_text[$value->type];
+                }
+                $value->text = str_replace('%d',$notification->text, $text);
                 $notifications_data[$key] = $value;
                 foreach ($value as $k => $v) {
                     if ($k == 'notifier_id') {

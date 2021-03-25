@@ -33,6 +33,15 @@ require $_LIBS . 'theme.php';
 require_once $_LIBS . 'webtopay.php';
 require $_BASEPATH . 'core.php';
 require $_LIBS . 'dataset.php';
+
+
+if( ISSET( $_GET['theme'] ) && in_array($_GET['theme'], ['default', 'love'])){
+    $_SESSION['theme'] = $_GET['theme'];
+}
+
+if( ISSET( $_SESSION['theme'] ) ){
+    $config->theme = $_SESSION['theme'];
+}
 //if( $config->spam_warning == '1' ) {
 //    require_once $_LIBS . 'opinion.php';
 //    $op = new Opinion();
